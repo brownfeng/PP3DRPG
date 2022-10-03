@@ -9,6 +9,8 @@ public class MouseManager : MonoBehaviour
     public static MouseManager Instance;
     public event Action<Vector3> OnMouseClick;
 
+    public Texture2D Point, Doorway, Attack, Target, Arrow;
+
     private RaycastHit hitInfo;
     private void Awake()
     {
@@ -31,6 +33,12 @@ public class MouseManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hitInfo)) { 
             /// «–ªª Û±ÍÃ˘Õº
+            switch(hitInfo.collider.tag)
+            {
+                case "Ground":
+                    Cursor.SetCursor(Target, new Vector2(16, 16), CursorMode.Auto);
+                  break;
+            }
         }
     }
 

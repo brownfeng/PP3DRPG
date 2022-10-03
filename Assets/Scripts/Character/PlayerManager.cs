@@ -10,15 +10,14 @@ public class PlayerManager : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         //MouseManager.Instance.OnMouseClick += OnMouseClick; // 因为这里的 MouseManager.Instance 可能为空
-
     }
 
     private void Start()
     {
-        MouseManager.Instance.OnMouseClick += OnMouseClick;
+        MouseManager.Instance.OnMouseClick += MoveToTarget;
     }
 
-    private void OnMouseClick(Vector3 vector) {
+    private void MoveToTarget(Vector3 vector) {
         agent.destination = vector;
     }
 

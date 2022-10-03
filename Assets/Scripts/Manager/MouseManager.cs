@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 
 [System.Serializable]
-public class EventVector3 : UnityEvent<Vector3> { }
 public class MouseManager : MonoBehaviour
 {
-    public EventVector3 OnMouseClick;
+    public static MouseManager Instance;
+    public event Action<Vector3> OnMouseClick;
 
     private RaycastHit hitInfo;
-
+    private void Awake()
+    {
+        if (MouseManager.Instance != null)
+        {
+            Destroy(this);
+        }
+        else {
+            MouseManager.Instance = this;
+        }
+    }
     private void Update()
     {
         SetCursorTexture();
@@ -26,7 +35,7 @@ public class MouseManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 在按下鼠标左键的时, 根据鼠标射线指向的碰撞体
+    /// 在按下鼠标左键的时, 根据鼠标射线指向的碰撞体比较 Tag, 然后触发对外的鼠标点击回调方法
     /// </summary>
     private void MouseControl() { 
         if(Input.GetMouseButtonDown(0) && hitInfo.collider != null)

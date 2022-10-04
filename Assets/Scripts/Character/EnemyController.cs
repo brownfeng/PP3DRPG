@@ -19,6 +19,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private Vector3 nextWayPos;
     [SerializeField] private Vector3 guardPos;
 
+    // 迅游角色在到达指定位置以后, 会等待一段时间, 再进入下一个位置
+    public float lookAtTime;
+    private float remainLookAtTime;
+
     private Animator anim;
     private NavMeshAgent agent;
 
@@ -41,6 +45,7 @@ public class EnemyController : MonoBehaviour
 
         // 启动时, 缓存初始位置. 后续再 Patrol 时, 围绕初始范围巡逻
         guardPos = transform.position;
+        remainLookAtTime = lookAtTime;
     }
 
     private void Start()
@@ -90,11 +95,18 @@ public class EnemyController : MonoBehaviour
 
                 agent.speed = speed * 0.5f;
 
-                // 判断是否到 nextWayPoint
+                // 判断是否到了 nextWayPoint
                 if(Vector3.Distance(transform.position, nextWayPos) <= agent.stoppingDistance)
                 {
                     isWalk = false;
-                    GetNewWayPoint();
+                    // 冷却时间
+                    if(remainLookAtTime > 0)
+                    {
+                        remainLookAtTime -= Time.deltaTime;
+                    } else
+                    {
+                        GetNewWayPoint();
+                    }
                 }
                 else
                 {
@@ -113,11 +125,22 @@ public class EnemyController : MonoBehaviour
                 // 判断是否在周围
                 if (!FoundPlayer())
                 {
-                    // 拉脱回上一个状态
+                    // TODO: 拉脱战回上一个状态
                     isFollow = false;
-                    agent.destination = transform.position;
 
-                    enemyState = isGuard ?  EnemyState.GUARD: EnemyState.PATROL;
+                    // 如果还存在一些等待时间, 先等待!!!
+                    if (remainLookAtTime > 0)
+                    {
+                        agent.destination = transform.position;
+                        remainLookAtTime -= Time.deltaTime;
+                    }
+                    else if (isGuard)
+                    {
+                        enemyState = EnemyState.GUARD ;
+                    }
+                    else {
+                        enemyState = EnemyState.PATROL;
+                    }
                 }
                 else {
                     // 追击Player
@@ -148,6 +171,7 @@ public class EnemyController : MonoBehaviour
 
     private void GetNewWayPoint()
     {
+        remainLookAtTime = lookAtTime;
         float randomX = Random.Range(-patrolRange, patrolRange);
         float randomZ = Random.Range(-patrolRange, patrolRange);
 

@@ -42,6 +42,10 @@ public class MouseManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction, Color.red);
 
+        // 问题: 使用鼠标射线时, 如果要点击树木后面的地板, 则由于树木会挡住鼠标位置发送的射线, 因此有两种解决方法:
+        // 1. 直接在场景中选择所有的树木, 选择它们的Layer为 2 Ignore Rycast -- 也就是忽略所有的射线
+        // 2. 在 Physics.Raycast, 我们会根据射线与 collider 的接触, 可以将场景中的树木的 MeshCollider disable.
+        //  一般选用 2, 使用NavMesh 导航情况下, 一般不会和树木碰撞穿模 (优势: 后续开发中,如果有东西爆出来, 那么和树木不会产生碰撞)
         if (Physics.Raycast(ray, out hitInfo)) { 
             /// 切换鼠标贴图
             switch(hitInfo.collider.tag)

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,22 +6,29 @@ public enum EnemyState { GUARD, PATROL, CHASE, DEAD }
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : MonoBehaviour
 {
-    public EnemyState enemyState;
+    private EnemyState enemyState;
 
     [Header("Basic Settings")]
     public float sightRadius;
 
+
+    [Header("Patrol Settings")]
     public bool isGuard;
+    // 如果是 Patrol 对象, 设置它的巡逻范围
+    public float patrolRange;
+
+    [SerializeField] private Vector3 nextWayPoint;
 
     private Animator anim;
     private NavMeshAgent agent;
 
+    // 当检测到 Player 在指定范围, 开始切换 FSM
     private GameObject attackTarget;
-    // 记录原有速度(默认是2.5)
+    // 记录原有速度(默认是2.5), 离开 Chase 状态时, speed * 0.5.
     private float speed;
 
     // Animator Layer State
-    private bool isWalk; // BaseLayer 中, 用来描述Enemy是否在行走动画
+    private bool isWalk; // BaseLayer 中, 用来描述Enemy是否在行走动画 => 只在 Patrol State 有效
     private bool isChase; // 是否切换到 Attack Layer. 无论上一个状态是什么, 会切换到当前Layer
     private bool isFollow; //  在 Attack Layer 中有效, 表示是否在追击Player( Run 动画)
 
@@ -34,7 +38,19 @@ public class EnemyController : MonoBehaviour
         speed = agent.speed;
 
         anim = GetComponent<Animator>();
+    }
 
+    private void Start()
+    {
+        if (isGuard) {
+            enemyState = EnemyState.GUARD;
+
+        }
+        else 
+        {
+            enemyState = EnemyState.PATROL;
+            GetNewWayPoint();
+        }
     }
 
     // Update is called once per frame
@@ -66,6 +82,22 @@ public class EnemyController : MonoBehaviour
             case EnemyState.GUARD:
                 break;
             case EnemyState.PATROL:
+                isWalk = true;
+                isChase = false;
+
+                agent.speed = speed * 0.5f;
+
+                // 判断是否到 nextWayPoint
+                if(Vector3.Distance(transform.position, nextWayPoint) <= agent.stoppingDistance)
+                {
+                    isWalk = false;
+                    GetNewWayPoint();
+                }
+                else
+                {
+                    isWalk = true;
+                    agent.destination = nextWayPoint;
+                }
                 break;
             case EnemyState.CHASE:
                 isWalk = false;
@@ -109,5 +141,28 @@ public class EnemyController : MonoBehaviour
         }
         attackTarget = null;
         return false;
+    }
+
+    private void GetNewWayPoint()
+    {
+        float randomX = Random.Range(-patrolRange, patrolRange);
+        float randomZ = Random.Range(-patrolRange, patrolRange);
+
+        // 寻找 position 同一个Y 高度的随机值!
+        Vector3 randomPoint = new Vector3(randomX, transform.position.y, randomZ);
+        //FIXME: 可能出现问题
+        nextWayPoint = randomPoint;
+    }
+
+    // 当点击角色, 并选中角色的时, 绘制 Gizmos
+    // 1. 绘制 视野范围
+    // 2. 绘制 巡逻范围 - 使用 WireSphere 而不是 Sphere(空心圆...)
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, sightRadius);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, patrolRange);
     }
 }

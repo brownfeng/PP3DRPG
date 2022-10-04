@@ -46,6 +46,10 @@ public class MouseManager : MonoBehaviour
         // 1. 直接在场景中选择所有的树木, 选择它们的Layer为 2 Ignore Rycast -- 也就是忽略所有的射线
         // 2. 在 Physics.Raycast, 我们会根据射线与 collider 的接触, 可以将场景中的树木的 MeshCollider disable.
         //  一般选用 2, 使用NavMesh 导航情况下, 一般不会和树木碰撞穿模 (优势: 后续开发中,如果有东西爆出来, 那么和树木不会产生碰撞)
+
+        // 问题: 如果需要点击敌人, 需要在 Enemy 身上增加 Box Collider, 否则鼠标射线无法选中, 并且统一增加Tag 
+        
+        // 问题: 如果需要敌人也需要启动遮挡剔除, 需要在 URP Render 中配置!!!
         if (Physics.Raycast(ray, out hitInfo)) { 
             /// 切换鼠标贴图
             switch(hitInfo.collider.tag)
@@ -53,6 +57,9 @@ public class MouseManager : MonoBehaviour
                 case "Ground":
                     Cursor.SetCursor(Target, new Vector2(16, 16), CursorMode.Auto);
                   break;
+                case "Enemy":
+                    Cursor.SetCursor(Attack, new Vector2(16, 16), CursorMode.Auto);
+                    break;
             }
         }
     }

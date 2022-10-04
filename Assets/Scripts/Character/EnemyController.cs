@@ -11,9 +11,12 @@ public class EnemyController : MonoBehaviour
 {
     public EnemyState enemyState;
 
+    [Header("Basic Settings")]
+    public float sightRadius;
+  
     private NavMeshAgent agent;
 
-    private void Awake()
+    void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
     }
@@ -26,6 +29,14 @@ public class EnemyController : MonoBehaviour
     }
 
     private void SwitchState() {
+
+        // 如果发现Player, 切换到 ChaseState
+        if (FoundPlayer())
+        {
+            enemyState = EnemyState.CHASE;
+            Debug.Log("Found player");
+        }
+
         switch (enemyState)
         {
             case EnemyState.GUARD:
@@ -37,5 +48,19 @@ public class EnemyController : MonoBehaviour
             case EnemyState.DEAD:
                 break;
         }
+    }
+
+    private bool FoundPlayer()
+    {
+        /// Physics 的API 都会要求周边物体拥有 Collider, 因此需要给物体增加 Collider
+        var colliders = Physics.OverlapSphere(transform.position, sightRadius);
+        foreach(var target in colliders)
+        {
+            if(target.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

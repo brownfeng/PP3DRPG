@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     {
         MouseManager.Instance.OnMouseClick += MoveToTarget;
         MouseManager.Instance.OnAttackClick += EventAttack;
-
     }
 
     private void Update()
@@ -69,7 +68,7 @@ public class PlayerController : MonoBehaviour
         // 2. 启动协程, 判断 player 与 enemy 距离
         transform.LookAt(attackTarget.transform);
 
-        // TODO: 距离判断, 后续根据武器大小, 怪物种类不同进行调整(有的怪物体积很大, 没办法完全走到距离为 1, 会发生碰撞)
+        // FIXME: 距离判断, 后续根据武器大小, 怪物种类不同进行调整(有的怪物体积很大, 没办法完全走到距离为 1, 会发生碰撞)
         // 持续判断 player/enmey 的距离, 如果大于距离为攻击距离! 继续移动!!! 否则, 触发攻击动画
         while(Vector3.Distance(transform.position, attackTarget.transform.position) > 1)
         {
@@ -82,7 +81,6 @@ public class PlayerController : MonoBehaviour
 
         if(lastAttackTime < 0)
         {
-
             // 攻击的动画基本都使用 Trigger:
             // 在切换到攻击动画时: 不需要 TransitionTime
             // 在Exit 攻击动画时, 需要 hasExit Time, 并且需要退出动画时间为1(一般来说,将攻击动画播放完成)

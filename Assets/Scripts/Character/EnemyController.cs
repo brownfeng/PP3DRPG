@@ -11,13 +11,13 @@ public class EnemyController : MonoBehaviour
     [Header("Basic Settings")]
     public float sightRadius;
 
-
-    [Header("Patrol Settings")]
+    [Header("Patrol Control")]
     public bool isGuard;
     // 如果是 Patrol 对象, 设置它的巡逻范围
     public float patrolRange;
 
-    [SerializeField] private Vector3 nextWayPoint;
+    [SerializeField] private Vector3 nextWayPos;
+    [SerializeField] private Vector3 guardPos;
 
     private Animator anim;
     private NavMeshAgent agent;
@@ -88,7 +88,7 @@ public class EnemyController : MonoBehaviour
                 agent.speed = speed * 0.5f;
 
                 // 判断是否到 nextWayPoint
-                if(Vector3.Distance(transform.position, nextWayPoint) <= agent.stoppingDistance)
+                if(Vector3.Distance(transform.position, nextWayPos) <= agent.stoppingDistance)
                 {
                     isWalk = false;
                     GetNewWayPoint();
@@ -96,7 +96,7 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     isWalk = true;
-                    agent.destination = nextWayPoint;
+                    agent.destination = nextWayPos;
                 }
                 break;
             case EnemyState.CHASE:
@@ -150,8 +150,12 @@ public class EnemyController : MonoBehaviour
 
         // 寻找 position 同一个Y 高度的随机值!
         Vector3 randomPoint = new Vector3(randomX, transform.position.y, randomZ);
-        //FIXME: 可能出现问题
-        nextWayPoint = randomPoint;
+        //FIXME: 可能出现问题 - 可能选择的点, 是无法走过去的...
+        // 在NavMesh 中,以 randomPoint 为坐标, patrolRange 为范围, 选择一个坐标
+        NavMeshHit hit;
+        // 找到与目标点最近的范围内的导航点, 返回是否能找到
+        bool walkable = NavMesh.SamplePosition(randomPoint, out hit, patrolRange, 1);
+        nextWayPos = walkable ? hit.position : transform.position;
     }
 
     // 当点击角色, 并选中角色的时, 绘制 Gizmos

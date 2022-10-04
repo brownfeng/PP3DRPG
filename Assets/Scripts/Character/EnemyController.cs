@@ -13,14 +13,20 @@ public class EnemyController : MonoBehaviour
 
     [Header("Basic Settings")]
     public float sightRadius;
+
+    public bool isGuard;
   
     private NavMeshAgent agent;
+
+    private GameObject attackTarget;
+    // 记录原有速度(默认是2.5)
+    private float speed;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        speed = agent.speed;
     }
-
 
     // Update is called once per frame
     void Update()
@@ -44,6 +50,20 @@ public class EnemyController : MonoBehaviour
             case EnemyState.PATROL:
                 break;
             case EnemyState.CHASE:
+                agent.speed = speed;
+
+                // TODO: 在攻击范围内, 攻击
+                // TODO: 攻击Trigger 动画
+                // 判断是否在周围
+                if (!FoundPlayer())
+                {
+                    // 拉脱回上一个状态
+                }
+                else {
+                    // 追击Player
+                    agent.destination = attackTarget.transform.position;
+                    agent.speed = speed * 0.5f;
+                }
                 break;
             case EnemyState.DEAD:
                 break;
@@ -58,9 +78,11 @@ public class EnemyController : MonoBehaviour
         {
             if(target.CompareTag("Player"))
             {
+                attackTarget = target.gameObject;
                 return true;
             }
         }
+        attackTarget = null;
         return false;
     }
 }

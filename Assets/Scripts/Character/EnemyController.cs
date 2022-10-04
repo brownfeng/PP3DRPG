@@ -38,6 +38,9 @@ public class EnemyController : MonoBehaviour
         speed = agent.speed;
 
         anim = GetComponent<Animator>();
+
+        // 启动时, 缓存初始位置. 后续再 Patrol 时, 围绕初始范围巡逻
+        guardPos = transform.position;
     }
 
     private void Start()
@@ -148,9 +151,9 @@ public class EnemyController : MonoBehaviour
         float randomX = Random.Range(-patrolRange, patrolRange);
         float randomZ = Random.Range(-patrolRange, patrolRange);
 
-        // 寻找 position 同一个Y 高度的随机值!
-        Vector3 randomPoint = new Vector3(randomX, transform.position.y, randomZ);
-        //FIXME: 可能出现问题 - 可能选择的点, 是无法走过去的...
+        // 注意: 这里选择的范围, 是使用 guardPos + random, 并且在Y方向使用功能的 模型当前Y位置!!(可能有坡度)
+        Vector3 randomPoint = new Vector3(guardPos.x + randomX, transform.position.y, guardPos.z + randomZ);
+        // 注意: 可能选择的点, 是无法 NavMesh 的...
         // 在NavMesh 中,以 randomPoint 为坐标, patrolRange 为范围, 选择一个坐标
         NavMeshHit hit;
         // 找到与目标点最近的范围内的导航点, 返回是否能找到

@@ -15,26 +15,44 @@ public class EnemyController : MonoBehaviour
     public float sightRadius;
 
     public bool isGuard;
-  
+
+    private Animator anim;
     private NavMeshAgent agent;
 
     private GameObject attackTarget;
     // 记录原有速度(默认是2.5)
     private float speed;
 
+    // Animator Layer State
+    private bool isWalk; // BaseLayer 中, 用来描述Enemy是否在行走动画
+    private bool isChase; // 是否切换到 Attack Layer. 无论上一个状态是什么, 会切换到当前Layer
+    private bool isFollow; //  在 Attack Layer 中有效, 表示是否在追击Player( Run 动画)
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         speed = agent.speed;
+
+        anim = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         SwitchState();
+        SetAnimator();
+    }
+
+    private void SetAnimator()
+    {
+        anim.SetBool("Walk", isWalk);
+        anim.SetBool("Chase", isChase);
+        anim.SetBool("Follow", isFollow);
     }
 
     private void SwitchState() {
+        agent.speed = speed * 0.5f; // 正常状态, 速度只有原来的一半
 
         // 如果发现Player, 切换到 ChaseState
         if (FoundPlayer())
@@ -50,6 +68,9 @@ public class EnemyController : MonoBehaviour
             case EnemyState.PATROL:
                 break;
             case EnemyState.CHASE:
+                isWalk = false;
+                isChase = true;
+
                 agent.speed = speed;
 
                 // TODO: 在攻击范围内, 攻击
@@ -58,11 +79,15 @@ public class EnemyController : MonoBehaviour
                 if (!FoundPlayer())
                 {
                     // 拉脱回上一个状态
+                    isFollow = false;
+                    agent.destination = transform.position;
+
+                    enemyState = isGuard ?  EnemyState.GUARD: EnemyState.PATROL;
                 }
                 else {
                     // 追击Player
                     agent.destination = attackTarget.transform.position;
-                    agent.speed = speed * 0.5f;
+                    isFollow = true;
                 }
                 break;
             case EnemyState.DEAD:

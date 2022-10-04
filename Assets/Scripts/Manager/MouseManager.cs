@@ -13,6 +13,8 @@ public class MouseManager : MonoBehaviour
     // 另外, 由于EventVector3 使用 [System.Serializable] 进行声明, 因此在UnityEditor中, 会暴露配置回调函数的选项!!!
     public event Action<Vector3> OnMouseClick;
 
+    public event Action<GameObject> OnAttackClick;
+
     public Texture2D Point, Doorway, Attack, Target, Arrow;
 
     private RaycastHit hitInfo;
@@ -75,7 +77,12 @@ public class MouseManager : MonoBehaviour
             if (hitInfo.collider.gameObject.CompareTag("Ground"))
             {
                 // 注意, 调用时, 可以使用 ?.Invoke(arg1) 方式...
-                OnMouseClick.Invoke(hitInfo.point);
+                OnMouseClick?.Invoke(hitInfo.point);
+            }
+
+            if(hitInfo.collider.gameObject.CompareTag("Enemy"))
+            {
+                OnAttackClick?.Invoke(hitInfo.collider.gameObject);
             }
         }
     }

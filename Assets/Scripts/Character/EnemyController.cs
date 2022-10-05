@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private Vector3 nextWayPos;
     [SerializeField] private Vector3 guardPos;
+    [SerializeField] private Quaternion guardRotation;
 
     [Header("Look At Time")]
     // 迅游角色在到达指定位置以后, 会等待一段时间, 再进入下一个位置
@@ -49,6 +50,7 @@ public class EnemyController : MonoBehaviour
 
         // 启动时, 缓存初始位置. 后续再 Patrol 时, 围绕初始范围巡逻
         guardPos = transform.position;
+        guardRotation = transform.rotation;
         remainLookAtTime = lookAtTime;
         speed = agent.speed;
     }
@@ -98,6 +100,23 @@ public class EnemyController : MonoBehaviour
         switch (enemyState)
         {
             case EnemyState.GUARD:
+                isChase = false;
+
+                // FIXME: 这里会一直执行当前函数
+                if (transform.position != guardPos)
+                {
+                    isWalk = true;
+                    agent.isStopped = false;
+                    agent.destination = guardPos;
+
+                    Debug.Log(" 位子不标准.. 还没到, 但是停止了");
+                    if (Vector3.SqrMagnitude(guardPos - transform.position) <= agent.stoppingDistance)
+                    {
+                        isWalk = false;
+                        transform.rotation = Quaternion.Lerp(transform.rotation, guardRotation, 0.05f);
+                    }
+                } 
+     
                 break;
             case EnemyState.PATROL:
                 isWalk = true;

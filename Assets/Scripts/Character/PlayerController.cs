@@ -6,21 +6,25 @@ public class PlayerController : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Animator anim;
+    private CharacterStats characterStats;
 
     private GameObject attackTarget;
     private float lastAttackTime;
 
     private void Awake()
     {
+        // MouseManager.Instance.OnMouseClick += OnMouseClick; 
+        // 因为这里的 MouseManager.Instance 可能为空
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        //MouseManager.Instance.OnMouseClick += OnMouseClick; // 因为这里的 MouseManager.Instance 可能为空
+        characterStats = GetComponent<CharacterStats>();
     }
 
     private void Start()
     {
         MouseManager.Instance.OnMouseClick += MoveToTarget;
         MouseManager.Instance.OnAttackClick += EventAttack;
+        characterStats.MaxHealth = 2;
     }
 
     private void Update()

@@ -68,6 +68,10 @@ public class EnemyController : MonoBehaviour
         SetAnimator();
     }
 
+    /// <summary>
+    /// 每一帧都会设置 Animator 的事件, 驱动动画状态机变化(注意每一帧!!!)
+    /// 因此在 SwitchState() 方法中, 每一帧都要设置这几个状态值
+    /// </summary>
     private void SetAnimator()
     {
         anim.SetBool("Walk", isWalk);

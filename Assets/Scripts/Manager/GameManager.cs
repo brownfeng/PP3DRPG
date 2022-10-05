@@ -22,4 +22,12 @@ public class GameManager : Singleton<GameManager>
     {
         endGameObservers.Remove(observer);
     }
+
+    public void NotifyObservers()
+    {
+        foreach (IEndGameObserver observer in endGameObservers)
+        {
+            observer.EndNotify();
+        }
+    }
 }

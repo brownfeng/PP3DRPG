@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
     private Animator anim;
     private NavMeshAgent agent;
     private CharacterStats characterStats;
-    private Collider collider;
+    private Collider coll;
 
     // 当检测到 Player 在指定范围, 开始切换 FSM
     private GameObject attackTarget;
@@ -44,18 +44,29 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
     private bool isFollow; //  在 Attack Layer 中有效, 表示是否在追击Player( Run 动画)
     private bool isDeath; // 在 Death Layer 中有效, 表示当前角色在
 
+    private bool playerDead;
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         characterStats = GetComponent<CharacterStats>();
-        collider = GetComponent<Collider>();
+        coll = GetComponent<Collider>();
 
         // 启动时, 缓存初始位置. 后续再 Patrol 时, 围绕初始范围巡逻
         guardPos = transform.position;
         guardRotation = transform.rotation;
         remainLookAtTime = lookAtTime;
         speed = agent.speed;
+    }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.AddObserver(this); 
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.RemoveObserver(this);
     }
 
     private void Start()
@@ -78,10 +89,13 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
             isDeath = true;
         }
 
-        SwitchState();
-        SetAnimator();
+        if(!playerDead)
+        {
+            SwitchState();
+            SetAnimator();
 
-        lastAttackTime -= Time.deltaTime; 
+            lastAttackTime -= Time.deltaTime;
+        }
     }
 
     /// <summary>
@@ -120,8 +134,6 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
                     isWalk = true;
                     agent.isStopped = false;
                     agent.destination = guardPos;
-
-                    Debug.Log(" 位子不标准.. 还没到, 但是停止了");
                     if (Vector3.SqrMagnitude(guardPos - transform.position) <= agent.stoppingDistance)
                     {
                         isWalk = false;
@@ -212,7 +224,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
                 }
                 break;
             case EnemyState.DEAD:
-                collider.enabled = false;
+                coll.enabled = false;
                 agent.enabled = false;
                 Destroy(gameObject, 2);
                 break;
@@ -234,8 +246,6 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
             anim.SetTrigger("Skill");
         }
         // 2. 技能攻击
-
-
     }
 
     private bool TargetInAttackRange()
@@ -321,6 +331,10 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         // 获胜动画
         // 停止所有的移动
         // 停止Agent
-
+        playerDead = true;
+        anim.SetBool("Win", true);
+        isChase = false;
+        isWalk = false;
+        attackTarget = null;
     }
 }

@@ -19,12 +19,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private Vector3 nextWayPos;
     [SerializeField] private Vector3 guardPos;
 
+    [Header("Look At Time")]
     // 迅游角色在到达指定位置以后, 会等待一段时间, 再进入下一个位置
     public float lookAtTime;
     private float remainLookAtTime;
+    [Header("Attack Cool Down Time")]
+    // 攻击间隔, 判断(需要在 Update() 方法中减少)
+    private float lastAttackTime;
 
     private Animator anim;
     private NavMeshAgent agent;
+    private CharacterStats characterStats;
 
     // 当检测到 Player 在指定范围, 开始切换 FSM
     private GameObject attackTarget;
@@ -39,22 +44,21 @@ public class EnemyController : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        speed = agent.speed;
-
         anim = GetComponent<Animator>();
+        characterStats = GetComponent<CharacterStats>();
 
         // 启动时, 缓存初始位置. 后续再 Patrol 时, 围绕初始范围巡逻
         guardPos = transform.position;
         remainLookAtTime = lookAtTime;
+        speed = agent.speed;
     }
 
     private void Start()
     {
         if (isGuard) {
             enemyState = EnemyState.GUARD;
-
         }
-        else 
+        else
         {
             enemyState = EnemyState.PATROL;
             GetNewWayPoint();
@@ -66,6 +70,8 @@ public class EnemyController : MonoBehaviour
     {
         SwitchState();
         SetAnimator();
+
+        lastAttackTime -= Time.deltaTime; 
     }
 
     /// <summary>
@@ -77,6 +83,7 @@ public class EnemyController : MonoBehaviour
         anim.SetBool("Walk", isWalk);
         anim.SetBool("Chase", isChase);
         anim.SetBool("Follow", isFollow);
+        anim.SetBool("Critical", characterStats.isCritical);
     }
 
     private void SwitchState() {
@@ -100,11 +107,11 @@ public class EnemyController : MonoBehaviour
                 agent.speed = speed * 0.5f;
 
                 // 判断是否到了 nextWayPoint
-                if(Vector3.Distance(transform.position, nextWayPos) <= agent.stoppingDistance)
+                if (Vector3.Distance(transform.position, nextWayPos) <= agent.stoppingDistance)
                 {
                     isWalk = false;
                     // 冷却时间
-                    if(remainLookAtTime > 0)
+                    if (remainLookAtTime > 0)
                     {
                         remainLookAtTime -= Time.deltaTime;
                     } else
@@ -140,20 +147,84 @@ public class EnemyController : MonoBehaviour
                     }
                     else if (isGuard)
                     {
-                        enemyState = EnemyState.GUARD ;
+                        enemyState = EnemyState.GUARD;
                     }
                     else {
                         enemyState = EnemyState.PATROL;
                     }
                 }
-                else {
-                    // 追击Player
-                    agent.destination = attackTarget.transform.position;
+                else
+                {
+                    // TODO: 需要跟踪 attackTarget
                     isFollow = true;
+                    agent.isStopped = false;
+                    agent.destination = attackTarget.transform.position;
+                }
+
+                //TODO: 攻击范围检测, 如果在范围, 进行攻击, 并重置冷却时间
+                if(TargetInAttackRange() || TargetInSkillRange())
+                {
+                    isFollow = false;
+                    agent.isStopped = true;
+
+                    // TODO: 重新计算暴击率
+                    // TODO: 判断 CoolDown 时间戳, 触发攻击
+                    if(lastAttackTime < 0)
+                    {
+                        lastAttackTime = characterStats.CoolDown;
+
+                        // 暴击判断
+                        characterStats.isCritical = Random.value < characterStats.CriticalChance;
+
+                        // 执行攻击
+                        Attack();
+                    }
                 }
                 break;
             case EnemyState.DEAD:
                 break;
+        }
+    }
+
+    private void Attack()
+    {
+        transform.LookAt(attackTarget.transform);
+        // 1. 近身攻击
+
+        if(TargetInAttackRange())
+        {
+            anim.SetTrigger("Attack");
+        }
+
+        if (TargetInSkillRange())
+        {
+            anim.SetTrigger("Skill");
+        }
+        // 2. 技能攻击
+
+
+    }
+
+    private bool TargetInAttackRange()
+    {
+        if(attackTarget != null)
+        {
+            return Vector3.Distance(attackTarget.transform.position, transform.position) <= characterStats.AttackRange;
+        }else
+        {
+            return false;
+        }
+    }
+
+    private bool TargetInSkillRange()
+    {
+        if (attackTarget != null)
+        {
+            return Vector3.Distance(attackTarget.transform.position, transform.position) <= characterStats.SkillRange;
+        }
+        else
+        {
+            return false;
         }
     }
 

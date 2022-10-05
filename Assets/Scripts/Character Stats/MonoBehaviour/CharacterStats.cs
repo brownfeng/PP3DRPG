@@ -6,6 +6,10 @@ public class CharacterStats : MonoBehaviour
 {
     // 角色数据, 都放在 模型 SO 中
     public CharacterData_SO characterData;
+    public AttackData_SO attackData;
+
+    [HideInInspector]
+    public bool isCritical; // 当前是否处于暴击状态
 
     #region Read from Data_SO
     public int MaxHealth { 
@@ -59,5 +63,97 @@ public class CharacterStats : MonoBehaviour
         set { characterData.currentDefence = value; }
     }
 
+    #endregion
+
+    #region Read from Attack_SO
+    public float AttackRange
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.attackRange;
+        }
+        set { attackData.attackRange = value; }
+    }
+
+    public float SkillRange
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.skillRange;
+        }
+        set { attackData.skillRange = value; }
+    }
+
+    public float CoolDown
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.coolDown;
+        }
+        set { attackData.coolDown = value; }
+    }
+
+    public int MinDamage
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.minDamage;
+        }
+        set { attackData.minDamage = value; }
+    }
+
+    public int MaxDamage
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.maxDamage;
+        }
+        set { attackData.maxDamage = value; }
+    }
+    public float CriticalMultiplier
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.criticalMultiplier;
+        }
+        set { attackData.criticalMultiplier = value; }
+    }
+
+    public float CriticalChance
+    {
+        get
+        {
+            if (attackData == null)
+            {
+                return 0;
+            }
+            else return attackData.criticalChance;
+        }
+        set { attackData.criticalChance = value; }
+    }
     #endregion
 }

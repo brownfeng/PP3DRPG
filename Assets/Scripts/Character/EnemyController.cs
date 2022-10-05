@@ -203,7 +203,7 @@ public class EnemyController : MonoBehaviour
                     {
                         lastAttackTime = characterStats.CoolDown;
 
-                        // 暴击判断
+                        // 更新 Enemy 的暴击状态
                         characterStats.isCritical = Random.value < characterStats.CriticalChance;
 
                         // 执行攻击
@@ -293,10 +293,9 @@ public class EnemyController : MonoBehaviour
         nextWayPos = walkable ? hit.position : transform.position;
     }
 
-    // Animator Event
+    // Animator Event - 会在暴击动画中间触发事件
     private void Hit()
     {
-        Debug.Log("Animation Event Hit...");
         if(attackTarget != null)
         {
             var targetStats = attackTarget.GetComponent<CharacterStats>();

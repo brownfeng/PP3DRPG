@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     {
         MouseManager.Instance.OnMouseClick += MoveToTarget;
         MouseManager.Instance.OnAttackClick += EventAttack;
+
+        // 在Player Start 时, 在GameManager中注册唯一的Player
+        GameManager.Instance.RegisterPlayer(characterStats);
     }
 
     private void Update()
@@ -103,11 +106,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Animator Event
+    // Animator Event, 主动触发暴击动画, 会让 targetStats 发生后仰动画
     private void Hit()
     {
         var targetStats = attackTarget.GetComponent<CharacterStats>();
-        // Player是主动攻击怪物, 因此一定拥有 target
+        // Player 是主动攻击怪物, 因此一定拥有 target
         targetStats.TakeDamage(characterStats, targetStats);
     } 
 }

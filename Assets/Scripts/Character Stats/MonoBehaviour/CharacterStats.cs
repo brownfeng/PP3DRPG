@@ -9,7 +9,14 @@ public class CharacterStats : MonoBehaviour
     public AttackData_SO attackData;
 
     [HideInInspector]
-    public bool isCritical; // 当前是否处于暴击状态
+    private bool _isCritical;
+    public bool isCritical {
+        get { return _isCritical; }
+        set {
+            Debug.Log($"isCritical change:{value}");
+            _isCritical = value; 
+        }
+    } // 当前是否处于暴击状态
 
     #region Read from Data_SO
     public int MaxHealth { 
@@ -167,7 +174,8 @@ public class CharacterStats : MonoBehaviour
         
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
 
-        if(isCritical)
+        // 需要根据攻击者是否是暴击来判断, 是否给防御者触发Hit动画
+        if(attacker.isCritical)
         {
             defender.gameObject.GetComponent<Animator>().SetTrigger("Hit");
         }
@@ -181,7 +189,6 @@ public class CharacterStats : MonoBehaviour
         if (isCritical)
         {
             coreDamage *= attackData.criticalMultiplier;
-            Debug.Log($"暴击!!" + coreDamage);
         }
         return (int)coreDamage;
     }

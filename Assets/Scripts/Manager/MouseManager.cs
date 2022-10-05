@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
 
 [System.Serializable]
-public class MouseManager : MonoBehaviour
+public class MouseManager : Singleton<MouseManager>
 {
-    public static MouseManager Instance;
-
     // 声明一个 UnityEvent 事件, 该事件在发生时, 会接受一个 Vector3 的变量
     // 注意, 在调用这个UnityEvent时, 可以使用 ?.Invoke(arg1) 方式...
     // 另外, 由于EventVector3 使用 [System.Serializable] 进行声明, 因此在UnityEditor中, 会暴露配置回调函数的选项!!!
@@ -18,16 +17,13 @@ public class MouseManager : MonoBehaviour
     public Texture2D Point, Doorway, Attack, Target, Arrow;
 
     private RaycastHit hitInfo;
-    private void Awake()
+
+    protected override void Awake()
     {
-        if (MouseManager.Instance != null)
-        {
-            Destroy(this);
-        }
-        else {
-            MouseManager.Instance = this;
-        }
+        base.Awake();
+        DontDestroyOnLoad(this);
     }
+
     private void Update()
     {
         SetCursorTexture();

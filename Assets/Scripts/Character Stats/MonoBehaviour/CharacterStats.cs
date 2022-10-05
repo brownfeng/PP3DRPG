@@ -167,6 +167,10 @@ public class CharacterStats : MonoBehaviour
         
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
 
+        if(isCritical)
+        {
+            defender.gameObject.GetComponent<Animator>().SetTrigger("Hit");
+        }
         // TODO: Update UI
         // TODO: О­бщ Update
     }

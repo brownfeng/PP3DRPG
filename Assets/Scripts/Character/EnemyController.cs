@@ -31,6 +31,7 @@ public class EnemyController : MonoBehaviour
     private Animator anim;
     private NavMeshAgent agent;
     private CharacterStats characterStats;
+    private Collider collider;
 
     // 当检测到 Player 在指定范围, 开始切换 FSM
     private GameObject attackTarget;
@@ -41,12 +42,14 @@ public class EnemyController : MonoBehaviour
     private bool isWalk; // BaseLayer 中, 用来描述Enemy是否在行走动画 => 只在 Patrol State 有效
     private bool isChase; // 是否切换到 Attack Layer. 无论上一个状态是什么, 会切换到当前Layer
     private bool isFollow; //  在 Attack Layer 中有效, 表示是否在追击Player( Run 动画)
+    private bool isDeath; // 在 Death Layer 中有效, 表示当前角色在
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         characterStats = GetComponent<CharacterStats>();
+        collider = GetComponent<Collider>();
 
         // 启动时, 缓存初始位置. 后续再 Patrol 时, 围绕初始范围巡逻
         guardPos = transform.position;
@@ -70,6 +73,11 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (characterStats.CurrentHealth == 0)
+        {
+            isDeath = true;
+        }
+
         SwitchState();
         SetAnimator();
 
@@ -86,13 +94,18 @@ public class EnemyController : MonoBehaviour
         anim.SetBool("Chase", isChase);
         anim.SetBool("Follow", isFollow);
         anim.SetBool("Critical", characterStats.isCritical);
+        anim.SetBool("Death", isDeath);
     }
 
     private void SwitchState() {
 
-        // 如果发现Player, 切换到 ChaseState
-        if (FoundPlayer())
+        if (isDeath)
         {
+            enemyState = EnemyState.DEAD;
+        }
+        else if (FoundPlayer())
+        {
+            // 如果发现Player, 切换到 ChaseState
             enemyState = EnemyState.CHASE;
         }
 
@@ -199,6 +212,9 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
             case EnemyState.DEAD:
+                collider.enabled = false;
+                agent.enabled = false;
+                Destroy(gameObject, 2);
                 break;
         }
     }

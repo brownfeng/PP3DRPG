@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public enum EnemyState { GUARD, PATROL, CHASE, DEAD }
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IEndGameObserver
 {
     private EnemyState enemyState;
 
@@ -314,5 +314,13 @@ public class EnemyController : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, patrolRange);
+    }
+
+    public void EndNotify()
+    {
+        // 获胜动画
+        // 停止所有的移动
+        // 停止Agent
+
     }
 }

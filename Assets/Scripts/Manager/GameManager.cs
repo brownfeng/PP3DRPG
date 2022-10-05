@@ -6,8 +6,20 @@ public class GameManager : Singleton<GameManager>
 {
     public CharacterStats playerStats;
 
-    public void RegisterPlayer(CharacterStats playerStats)
-    {
+    List<IEndGameObserver> endGameObservers = new List<IEndGameObserver>();
 
+    public void RegisterPlayer(CharacterStats player)
+    {
+        playerStats = player;
+    }
+
+    public void AddObserver(IEndGameObserver observer)
+    {
+        endGameObservers.Add(observer);
+    }
+
+    public void RemoveObserver(IEndGameObserver observer)
+    {
+        endGameObservers.Remove(observer);
     }
 }

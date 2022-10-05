@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private GameObject attackTarget;
     private float lastAttackTime;
 
+    private bool isDead;
+
     private void Awake()
     {
         // MouseManager.Instance.OnMouseClick += OnMouseClick; 
@@ -29,13 +31,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        lastAttackTime -= Time.deltaTime;
+        isDead = characterStats.CurrentHealth == 0;
         SwitchAnimation();
+
+        lastAttackTime -= Time.deltaTime;
     }
 
     private void SwitchAnimation()
     {
         anim.SetFloat("Speed", agent.velocity.sqrMagnitude);
+        anim.SetBool("Death", isDead);
     }
 
     /// <summary>

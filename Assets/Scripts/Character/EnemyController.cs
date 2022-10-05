@@ -259,6 +259,18 @@ public class EnemyController : MonoBehaviour
         nextWayPos = walkable ? hit.position : transform.position;
     }
 
+    // Animator Event
+    private void Hit()
+    {
+        Debug.Log("Animation Event Hit...");
+        if(attackTarget != null)
+        {
+            var targetStats = attackTarget.GetComponent<CharacterStats>();
+            // Player是主动攻击怪物, 因此一定拥有 target
+            targetStats.TakeDamage(characterStats, targetStats);
+        }
+    }
+
     // 当点击角色, 并选中角色的时, 绘制 Gizmos
     // 1. 绘制 视野范围
     // 2. 绘制 巡逻范围 - 使用 WireSphere 而不是 Sphere(空心圆...)

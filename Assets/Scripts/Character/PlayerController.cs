@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private CharacterStats characterStats;
 
+    // Player 主动攻击的 GO
     private GameObject attackTarget;
     private float lastAttackTime;
 
@@ -24,7 +25,6 @@ public class PlayerController : MonoBehaviour
     {
         MouseManager.Instance.OnMouseClick += MoveToTarget;
         MouseManager.Instance.OnAttackClick += EventAttack;
-        characterStats.MaxHealth = 2;
     }
 
     private void Update()
@@ -54,11 +54,12 @@ public class PlayerController : MonoBehaviour
     /// <param name="target"></param>
     private void EventAttack(GameObject target)
     {
-
         if (target != null)
         {
             Debug.Log($"target {target}");
             attackTarget = target;
+            // 计算Player 当前的攻击是否是暴击
+            characterStats.isCritical = Random.value < characterStats.CriticalChance;
             StartCoroutine(MoveToAttackTarget());
         }
     }
@@ -85,7 +86,6 @@ public class PlayerController : MonoBehaviour
 
         if(lastAttackTime < 0)
         {
-            characterStats.isCritical = Random.value < characterStats.CriticalChance;
             anim.SetBool("Critical", characterStats.isCritical);
 
             // 攻击的动画基本都使用 Trigger:
@@ -97,4 +97,12 @@ public class PlayerController : MonoBehaviour
             lastAttackTime = characterStats.CoolDown;
         }
     }
+
+    // Animator Event
+    private void Hit()
+    {
+        var targetStats = attackTarget.GetComponent<CharacterStats>();
+        // Player是主动攻击怪物, 因此一定拥有 target
+        targetStats.TakeDamage(characterStats, targetStats);
+    } 
 }

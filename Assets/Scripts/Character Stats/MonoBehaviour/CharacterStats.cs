@@ -156,4 +156,30 @@ public class CharacterStats : MonoBehaviour
         set { attackData.criticalChance = value; }
     }
     #endregion
+
+    #region Character Combat
+
+    // 攻击时, 产生伤害 - 方法会在 Animation Event 中调用
+    public void TakeDamage(CharacterStats attacker, CharacterStats defender)
+    {
+        // 发生攻击时, 当前的攻击会导致
+        int damage = Mathf.Max(attacker.CurrentDamage() - defender.CurrentDefence, 0);
+        
+        CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+
+        // TODO: Update UI
+        // TODO: 经验 Update
+    }
+
+    private int CurrentDamage()
+    {
+        float coreDamage = UnityEngine.Random.Range(attackData.minDamage, attackData.maxDamage);
+        if (isCritical)
+        {
+            coreDamage *= attackData.criticalMultiplier;
+            Debug.Log($"暴击!!" + coreDamage);
+        }
+        return (int)coreDamage;
+    }
+    #endregion
 }

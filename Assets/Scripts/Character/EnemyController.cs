@@ -89,7 +89,6 @@ public class EnemyController : MonoBehaviour
     }
 
     private void SwitchState() {
-        agent.speed = speed * 0.5f; // 正常状态, 速度只有原来的一半
 
         // 如果发现Player, 切换到 ChaseState
         if (FoundPlayer())

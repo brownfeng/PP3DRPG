@@ -20,6 +20,8 @@ public class Grunt : EnemyController
 
             attackTarget.GetComponent<NavMeshAgent>().isStopped = true;
             attackTarget.GetComponent<NavMeshAgent>().velocity = direction * kickOff;
+
+            attackTarget.GetComponent<Animator>().SetTrigger("Dizzy");
         }
     }
 }

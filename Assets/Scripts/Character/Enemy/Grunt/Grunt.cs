@@ -9,6 +9,9 @@ public class Grunt : EnemyController
     [Header("Skill")]
     public float kickOff = 20;
     
+    /// <summary>
+    /// Animation Event, 当兽人攻击对象时, 会在动画帧间触发这个回调
+    /// </summary>
     public void KickOff()
     {
         if(attackTarget != null)

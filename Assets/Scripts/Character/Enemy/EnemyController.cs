@@ -240,7 +240,11 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
                 break;
             case EnemyState.DEAD:
                 coll.enabled = false;
-                agent.enabled = false;
+                /// 这里不要使用 agnet.enable = false, 因此在 Animation Event中, 我们会调用 StopAgent 脚本, 该脚本会获取 Enemy 身上的 NavMeshAgent, 然后操作
+                /// 因此在怪物死亡时, 会导致报错, 因此更好的方法是使用 agent.radius
+                //agent.enabled = false;
+         
+                agent.radius = 0;// 这样怪物就不会阻塞角色了.  卡尸不存在的.
                 Destroy(gameObject, 2);
                 break;
         }

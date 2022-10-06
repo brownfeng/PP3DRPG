@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Grunt BaseAttackData
   m_EditorClassIdentifier: 
   attackRange: 2.1
-  skillRange: 1.8
-  coolDown: 2
+  skillRange: 1.6
+  coolDown: 3
   minDamage: 3
   maxDamage: 6
   criticalMultiplier: 2
-  criticalChance: 0.3
+  criticalChance: 0.2

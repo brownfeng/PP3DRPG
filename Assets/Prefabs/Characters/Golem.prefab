@@ -211,11 +211,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3817edcf5704632408062796ba6b351e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRadius: 4
+  sightRadius: 10
   isGuard: 1
   patrolRange: 4
   lookAtTime: 4
   kickForce: 10
+  rockPrefab: {fileID: 4520264119090875901, guid: efba62020b31de04e95386e1b3e8696f, type: 3}
+  handPos: {fileID: 0}
 --- !u!114 &111890079568405365
 MonoBehaviour:
   m_ObjectHideFlags: 0

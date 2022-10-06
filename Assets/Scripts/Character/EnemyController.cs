@@ -59,27 +59,38 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         speed = agent.speed;
     }
 
-    private void OnEnable()
-    {
-        GameManager.Instance.AddObserver(this); 
-    }
-
-    private void OnDisable()
-    {
-        GameManager.Instance.RemoveObserver(this);
-    }
-
     private void Start()
     {
-        if (isGuard) {
+        if (isGuard)
+        {
             enemyState = EnemyState.GUARD;
         }
         else
         {
             enemyState = EnemyState.PATROL;
             GetNewWayPoint();
+        }        
+    }
+
+    // 多个脚本之间的 OnEnable 与 Start 调用无法保证顺序, 只有统一个组件实例之间能保证顺序
+    // 如果需要强制保证实例顺序, Edit > Project Settings > Script Execution Order对脚本进行运行的顺序调整。
+    void OnEnable()
+    {
+        if(GameManager.Instance != null)
+        {
+            GameManager.Instance.AddObserver(this);
         }
     }
+
+    void OnDisable()
+    {
+        if(!GameManager.IsInitialized)
+        {
+            return;
+        }
+        GameManager.Instance.RemoveObserver(this);
+    }
+
 
     // Update is called once per frame
     void Update()

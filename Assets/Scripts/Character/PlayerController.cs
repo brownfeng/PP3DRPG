@@ -56,6 +56,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     private void MoveToTarget(Vector3 target) {
+        if(isDead)
+        {
+            return;
+        }
         StopAllCoroutines();
         agent.isStopped = false;
         agent.destination = target;
@@ -67,6 +71,11 @@ public class PlayerController : MonoBehaviour
     /// <param name="target"></param>
     private void EventAttack(GameObject target)
     {
+        if (isDead)
+        {
+            return;
+        }
+
         if (target != null)
         {
             Debug.Log($"target {target}");

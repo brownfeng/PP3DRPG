@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
+    // 生成角色数据的模板数据.
+    public CharacterData_SO templateData;
+
     // 角色数据, 都放在 模型 SO 中
     public CharacterData_SO characterData;
     public AttackData_SO attackData;
 
     [HideInInspector]
-    private bool _isCritical;
-    public bool isCritical {
-        get { return _isCritical; }
-        set {
-            Debug.Log($"isCritical change:{value}");
-            _isCritical = value; 
+    public bool isCritical;// 当前是否处于暴击状态
+
+    private void Awake()
+    {
+        if(templateData != null)
+        {
+            characterData = Instantiate(templateData);
         }
-    } // 当前是否处于暴击状态
+    }
 
     #region Read from Data_SO
     public int MaxHealth { 

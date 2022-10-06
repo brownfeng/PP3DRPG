@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TurtleShellAnimator
+  m_Name: Enemy_TurtleShell
   m_Controller: {fileID: 9100000, guid: d54ad8a328df57645a59a2595022314e, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 45e8ddf771eca3847a78cdc1ac1c1a8e, type: 2}

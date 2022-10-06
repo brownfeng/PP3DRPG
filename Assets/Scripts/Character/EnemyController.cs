@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public enum EnemyState { GUARD, PATROL, CHASE, DEAD }
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(CharacterStats))]
 public class EnemyController : MonoBehaviour, IEndGameObserver
 {
     private EnemyState enemyState;
@@ -16,9 +17,12 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
     // 如果是 Patrol 对象, 设置它的巡逻范围
     public float patrolRange;
 
-    [SerializeField] private Vector3 nextWayPos;
-    [SerializeField] private Vector3 guardPos;
-    [SerializeField] private Quaternion guardRotation;
+    private Vector3 nextWayPos;
+
+    // 初始位置
+    private Vector3 guardPos;
+    // 初始旋转
+    private Quaternion guardRotation;
 
     [Header("Look At Time")]
     // 迅游角色在到达指定位置以后, 会等待一段时间, 再进入下一个位置

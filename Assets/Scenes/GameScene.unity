@@ -4911,7 +4911,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1036116322}
-  m_LocalRotation: {x: 0.0000000075320585, y: 0.9743936, z: -0.22484912, w: 0.00000003264051}
+  m_LocalRotation: {x: -0.0000000047383413, y: 0.9743936, z: -0.22484912, w: -0.000000020533813}
   m_LocalPosition: {x: 0.88073856, y: 9.047, z: 35.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8095,7 +8095,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1935867812}
-  m_LocalRotation: {x: -0.013956321, y: 0.32730594, z: -0.15350707, w: -0.9322616}
+  m_LocalRotation: {x: -0.013956353, y: 0.32730594, z: -0.15350708, w: -0.93226165}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8823,6 +8823,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4882590954449279, guid: 670ad864b57c7c24499f5e6c626d8b5c, type: 3}
+      propertyPath: isGuard
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4882590954449279, guid: 670ad864b57c7c24499f5e6c626d8b5c, type: 3}
+      propertyPath: patrolRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4882590954449279, guid: 670ad864b57c7c24499f5e6c626d8b5c, type: 3}
+      propertyPath: sightRadius
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4246216303463384470, guid: 670ad864b57c7c24499f5e6c626d8b5c, type: 3}
       propertyPath: m_Name
       value: TurtleShell

@@ -318,7 +318,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         nextWayPos = walkable ? hit.position : transform.position;
     }
 
-    // Animator Event - 会在暴击动画中间触发事件
+    // Animator Event - 会在暴击动画中间触发事件, 事件用来出发 Player 身上的动画
     private void Hit()
     {
         if(attackTarget != null)

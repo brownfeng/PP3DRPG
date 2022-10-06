@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
     private Collider coll;
 
     // 当检测到 Player 在指定范围, 开始切换 FSM
-    private GameObject attackTarget;
+    protected GameObject attackTarget;
     // 记录原有速度(默认是2.5), 离开 Chase 状态时, speed * 0.5.
     private float speed;
 

@@ -7,7 +7,7 @@ public class Grunt : EnemyController
 {
 
     [Header("Skill")]
-    public float kickOff = 20;
+    public float kickForce = 20;
     
     /// <summary>
     /// Animation Event, 当兽人攻击对象时, 会在动画帧间触发这个回调
@@ -22,8 +22,7 @@ public class Grunt : EnemyController
             direction.Normalize();
 
             attackTarget.GetComponent<NavMeshAgent>().isStopped = true;
-            attackTarget.GetComponent<NavMeshAgent>().velocity = direction * kickOff;
-
+            attackTarget.GetComponent<NavMeshAgent>().velocity = direction * kickForce;
             attackTarget.GetComponent<Animator>().SetTrigger("Dizzy");
         }
     }

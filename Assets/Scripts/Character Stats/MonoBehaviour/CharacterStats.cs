@@ -181,7 +181,7 @@ public class CharacterStats : MonoBehaviour
         // 需要根据攻击者是否是暴击来判断, 是否给防御者触发Hit动画
         if(attacker.isCritical)
         {
-            defender.gameObject.GetComponent<Animator>().SetTrigger("Hit");
+            defender.GetComponent<Animator>().SetTrigger("Hit");
         }
         // TODO: Update UI
         // TODO: 经验 Update

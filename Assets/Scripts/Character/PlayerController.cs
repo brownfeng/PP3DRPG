@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour
 
     private bool isDead;
 
+    /// <summary>
+    /// 缓存默认的 stopDistance
+    /// </summary>
+    private float stopDistance;
+
     private void Awake()
     {
         // MouseManager.Instance.OnMouseClick += OnMouseClick; 
@@ -21,6 +26,8 @@ public class PlayerController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         characterStats = GetComponent<CharacterStats>();
+
+        stopDistance = agent.stoppingDistance;
     }
 
     private void Start()
@@ -56,11 +63,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     private void MoveToTarget(Vector3 target) {
-        if(isDead)
+
+        StopAllCoroutines();
+        if (isDead)
         {
             return;
         }
-        StopAllCoroutines();
+        // 当点击移动时, 能100%确保移动到指定位置, 而点击攻击角色时, 需要设置成CharacterData.attackRange
+        agent.stoppingDistance = stopDistance;
         agent.isStopped = false;
         agent.destination = target;
     }
@@ -90,6 +100,8 @@ public class PlayerController : MonoBehaviour
     {
         // 协程判断动作之前, 先判断角色是否停止了移动
         agent.isStopped = false;
+        /// 当攻击一些角色时, 如果角色模型很大. 可能攻击不到...
+        agent.stoppingDistance = characterStats.attackData.attackRange;
 
         // 1. 先将 player 转向, 朝向 enemy
         // 2. 启动协程, 判断 player 与 enemy 距离

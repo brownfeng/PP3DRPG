@@ -34,7 +34,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
 
     private Animator anim;
     private NavMeshAgent agent;
-    private CharacterStats characterStats;
+    protected CharacterStats characterStats;
     private Collider coll;
 
     // 当检测到 Player 在指定范围, 开始切换 FSM

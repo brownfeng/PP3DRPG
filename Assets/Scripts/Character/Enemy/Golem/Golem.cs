@@ -7,24 +7,25 @@ public class Golem : EnemyController
 {
 
     [Header("Skill")]
-    public float kickOff = 20;
+    public float kickForce = 20;
 
     /// <summary>
     /// Animation Event, 当兽人攻击对象时, 会在动画帧间触发这个回调
     /// </summary>
     public void KickOff()
     {
-        if (attackTarget != null)
+        if (attackTarget != null && transform.IsFacingTarget(attackTarget.transform))
         {
-            transform.LookAt(attackTarget.transform);
-
-            Vector3 direction = attackTarget.transform.position - transform.position; ;
+            var targetStats = attackTarget.GetComponent<CharacterStats>();
+            Vector3 direction = attackTarget.transform.position - transform.position;
             direction.Normalize();
 
-            attackTarget.GetComponent<NavMeshAgent>().isStopped = true;
-            attackTarget.GetComponent<NavMeshAgent>().velocity = direction * kickOff;
+            targetStats.GetComponent<NavMeshAgent>().isStopped = true;
+            targetStats.GetComponent<NavMeshAgent>().velocity = direction * kickForce;
 
-            attackTarget.GetComponent<Animator>().SetTrigger("Dizzy");
+            // 根据个人喜好添加
+            targetStats.GetComponent<Animator>().SetTrigger("Dizzy");
+            targetStats.TakeDamage(characterStats, targetStats);
         }
     }
 }

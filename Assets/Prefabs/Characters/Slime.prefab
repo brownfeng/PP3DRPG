@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &684649556503287625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2931453068880102939}
+  m_Layer: 7
+  m_Name: HealthBar Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2931453068880102939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684649556503287625}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7914339160918279774}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7908339100271188344
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,6 +460,7 @@ GameObject:
   - component: {fileID: 7909512253059967790}
   - component: {fileID: 1899934285}
   - component: {fileID: 2053892590}
+  - component: {fileID: 3466750741801602718}
   m_Layer: 7
   m_Name: Slime
   m_TagString: Enemy
@@ -450,6 +482,7 @@ Transform:
   m_Children:
   - {fileID: 7911643925845282984}
   - {fileID: 7914255368586664840}
+  - {fileID: 2931453068880102939}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -510,9 +543,6 @@ MonoBehaviour:
   sightRadius: 5
   isGuard: 1
   patrolRange: 8
-  nextWayPos: {x: 0, y: 0, z: 0}
-  guardPos: {x: 0, y: 0, z: 0}
-  guardRotation: {x: 0, y: 0, z: 0, w: 0}
   lookAtTime: 3
 --- !u!65 &7909512253059967790
 BoxCollider:
@@ -559,3 +589,19 @@ MonoBehaviour:
   characterData: {fileID: 0}
   attackData: {fileID: 11400000, guid: 8eadf43fd0d75a24a82d64a5aef21603, type: 2}
   isCritical: 0
+--- !u!114 &3466750741801602718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7910542992711100530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611f2531d3c1d3a4786151686b02b7ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUIPrefab: {fileID: 8660510173533368412, guid: 4a5ee83f94e817148aef750d72fc2812, type: 3}
+  barPoint: {fileID: 2931453068880102939}
+  alwaysVisible: 1
+  visiableTime: 0

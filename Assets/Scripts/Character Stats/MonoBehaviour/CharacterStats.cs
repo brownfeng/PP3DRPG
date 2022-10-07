@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterStats : MonoBehaviour
 {
+    // 当角色数据发生改变时..
+    public event Action<int, int> UpdateHealthBarOnAttack;
+
     // 生成角色数据的模板数据.
     public CharacterData_SO templateData;
 
@@ -184,6 +188,8 @@ public class CharacterStats : MonoBehaviour
             defender.GetComponent<Animator>().SetTrigger("Hit");
         }
         // TODO: Update UI
+
+        UpdateHealthBarOnAttack?.Invoke(CurrentHealth, MaxHealth);
         // TODO: 经验 Update
     }
 
@@ -191,6 +197,8 @@ public class CharacterStats : MonoBehaviour
     {
         int currentDamage = Mathf.Max(damage - defender.CurrentDefence, 0);
         CurrentHealth = Mathf.Max(CurrentHealth - currentDamage, 0);
+
+        UpdateHealthBarOnAttack?.Invoke(CurrentHealth, MaxHealth);
     }
 
     private int CurrentDamage()

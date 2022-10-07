@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 111890079568405362}
   - component: {fileID: 111890079568405365}
   - component: {fileID: 111890079568405364}
+  - component: {fileID: 9113700434322938524}
   m_Layer: 0
   m_Name: Golem
   m_TagString: Enemy
@@ -216,9 +217,9 @@ MonoBehaviour:
   isGuard: 1
   patrolRange: 4
   lookAtTime: 4
-  kickForce: 10
+  kickForce: 1000
   rockPrefab: {fileID: 4520264119090875901, guid: efba62020b31de04e95386e1b3e8696f, type: 3}
-  handPos: {fileID: 0}
+  handPos: {fileID: 111890079452462221}
 --- !u!114 &111890079568405365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +258,22 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &9113700434322938524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111890079179444201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611f2531d3c1d3a4786151686b02b7ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUIPrefab: {fileID: 8660510173533368412, guid: 4a5ee83f94e817148aef750d72fc2812, type: 3}
+  barPoint: {fileID: 1378081647959169032}
+  alwaysVisible: 0
+  visiableTime: 4
 --- !u!1 &111890079323270818
 GameObject:
   m_ObjectHideFlags: 0

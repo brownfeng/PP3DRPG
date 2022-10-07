@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 4882590954449279}
   - component: {fileID: 4882590954449282}
   - component: {fileID: 4882590954449283}
+  - component: {fileID: 3366587345798729718}
   m_Layer: 7
   m_Name: TurtleShell
   m_TagString: Enemy
@@ -502,9 +503,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a8393b250e1ed489c332f7aa6748a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRadius: 5
+  sightRadius: 3
   isGuard: 0
-  patrolRange: 0
+  patrolRange: 3
   lookAtTime: 3
 --- !u!65 &4882590954449282
 BoxCollider:
@@ -539,6 +540,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3366587345798729718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246216303463384470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611f2531d3c1d3a4786151686b02b7ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUIPrefab: {fileID: 8660510173533368412, guid: 4a5ee83f94e817148aef750d72fc2812, type: 3}
+  barPoint: {fileID: 6454232600932002947}
+  alwaysVisible: 0
+  visiableTime: 3
 --- !u!1 &4246266881346944086
 GameObject:
   m_ObjectHideFlags: 0

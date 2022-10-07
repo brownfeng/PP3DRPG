@@ -22,6 +22,7 @@ public class HealthBarUI : MonoBehaviour
 
     public float visiableTime;
 
+    private float timeleft;
     // 血条的滑动条
     Image healthSlider;
 
@@ -69,6 +70,9 @@ public class HealthBarUI : MonoBehaviour
         }
 
         UIbar.gameObject.SetActive(true);
+        timeleft = visiableTime;
+
+
         float sliderPercent = (float)currentHealth / maxHealth;
         healthSlider.fillAmount = sliderPercent;
     }
@@ -80,6 +84,14 @@ public class HealthBarUI : MonoBehaviour
         {
             UIbar.position = barPoint.position;
             UIbar.forward = -cam.forward;
+
+            if(timeleft <=0 && !alwaysVisible)
+            {
+                UIbar.gameObject.SetActive(false);
+            } else
+            {
+                timeleft -= Time.deltaTime;
+            }
         }
     }
 }

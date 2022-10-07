@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7aeb02c5cdd4847bb315e8588a9ac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rockState: 0
+  breakEffect: {fileID: 4303306238485040596, guid: e4d99805e04cc824ea6879fe24459836, type: 3}
   force: 10
   damage: 5
   target: {fileID: 0}

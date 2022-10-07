@@ -21,6 +21,8 @@ public class Rock : MonoBehaviour
     // 使用 RB.velocity 判断, 用刚体, 物理系统!!! 需要用 fixUp();
     public RockState rockState;
 
+    public GameObject breakEffect; 
+
     [Header("Basic Settings")]
     public float force;
 
@@ -83,6 +85,7 @@ public class Rock : MonoBehaviour
                 if (other.gameObject.GetComponent<Golem>()) {
                     var otherStats = other.gameObject.GetComponent<CharacterStats>();
                     otherStats.TakeDamage(damage, otherStats);
+                    Instantiate(breakEffect, transform.position, Quaternion.identity);
                     Destroy(gameObject);
                 }
                 break;

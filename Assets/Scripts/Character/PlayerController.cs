@@ -133,10 +133,22 @@ public class PlayerController : MonoBehaviour
     }
 
     // Animator Event, 主动触发暴击动画, 会让 targetStats 发生后仰动画
+    // 这里认为角色既可以攻击石头, 也可以攻击石头, 在攻击石头的时, 类似盾反效果
+    // 基于这种理论, 我们需要分一个大类, Attackable 标签给石头, 这里就能判断究竟攻击的是什么
     private void Hit()
     {
-        var targetStats = attackTarget.GetComponent<CharacterStats>();
-        // Player 是主动攻击怪物, 因此一定拥有 target
-        targetStats.TakeDamage(characterStats, targetStats);
+        if (attackTarget.CompareTag("Attackable"))
+        {
+            if(attackTarget.GetComponent<Rock>())
+            {
+                attackTarget.GetComponent<Rock>().rockState = Rock.RockState.HitEnemy;
+                attackTarget.GetComponent<Rigidbody>().velocity = Vector3.one;
+                attackTarget.GetComponent<Rigidbody>().AddForce(transform.forward * 20, ForceMode.Impulse);
+            }
+        }else {
+            var targetStats = attackTarget.GetComponent<CharacterStats>();
+            // Player 是主动攻击怪物, 因此一定拥有 target
+            targetStats.TakeDamage(characterStats, targetStats);
+        }
     } 
 }

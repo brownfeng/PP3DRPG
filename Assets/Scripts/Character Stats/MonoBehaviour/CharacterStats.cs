@@ -16,14 +16,14 @@ public class CharacterStats : MonoBehaviour
 
     private void Awake()
     {
-        if(templateData != null)
+        if (templateData != null)
         {
             characterData = Instantiate(templateData);
         }
     }
 
     #region Read from Data_SO
-    public int MaxHealth { 
+    public int MaxHealth {
         get
         {
             if (characterData == null)
@@ -175,16 +175,22 @@ public class CharacterStats : MonoBehaviour
     {
         // 发生攻击时, 当前的攻击会导致
         int damage = Mathf.Max(attacker.CurrentDamage() - defender.CurrentDefence, 0);
-        
+
         CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
 
         // 需要根据攻击者是否是暴击来判断, 是否给防御者触发Hit动画
-        if(attacker.isCritical)
+        if (attacker.isCritical)
         {
             defender.GetComponent<Animator>().SetTrigger("Hit");
         }
         // TODO: Update UI
         // TODO: 经验 Update
+    }
+
+    public void TakeDamage(int damage, CharacterStats defender)
+    {
+        int currentDamage = Mathf.Max(damage - defender.CurrentDefence, 0);
+        CurrentHealth = Mathf.Max(CurrentHealth - currentDamage, 0);
     }
 
     private int CurrentDamage()

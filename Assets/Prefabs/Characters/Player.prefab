@@ -1487,7 +1487,6 @@ GameObject:
   - component: {fileID: 8422892627211655372}
   - component: {fileID: 8422892627211655377}
   - component: {fileID: 979784167}
-  - component: {fileID: 4166804192704655224}
   - component: {fileID: 382007250}
   m_Layer: 6
   m_Name: Player
@@ -1599,22 +1598,6 @@ MonoBehaviour:
   characterData: {fileID: 11400000, guid: ac3599326aeddac4a9e266192de572e3, type: 2}
   attackData: {fileID: 11400000, guid: d5d90585dc2110742b4c2db701dbe314, type: 2}
   isCritical: 0
---- !u!114 &4166804192704655224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4113552747739337438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 611f2531d3c1d3a4786151686b02b7ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthUIPrefab: {fileID: 8660510173533368412, guid: 4a5ee83f94e817148aef750d72fc2812, type: 3}
-  barPoint: {fileID: 7035420839469394703}
-  alwaysVisible: 1
-  visiableTime: 3
 --- !u!54 &382007250
 Rigidbody:
   m_ObjectHideFlags: 0

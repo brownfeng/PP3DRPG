@@ -6,19 +6,19 @@ using UnityEngine.AI;
 public class Rock : MonoBehaviour
 {
 
-    // ÎªÁËÈÃÊ¯Í·ÄÜ¹¥»÷Íæ¼Ò, Ò²ÄÜ¹¥»÷Ê¯Í·ÈË, Òò´ËÐèÒª¹Ø¼ü×´Ì¬
+    // Îªï¿½ï¿½ï¿½ï¿½Ê¯Í·ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ò²ï¿½Ü¹ï¿½ï¿½ï¿½Ê¯Í·ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ø¼ï¿½×´Ì¬
     /// <summary>
-    /// Ê¯Í·ÓµÓÐ3¸ö×´Ì¬:
-    /// 1. HitPlayer: Ê¯Í·ÈËÈÓ³öµÄÊ¯Í·, Ä¿±êÊÇPlayer, ÔÚCollisionEnter (ÒòÎªÊ¯Í·ÓµÓÐ¸ÕÌå.) Ê±, ÅÐ¶Ï
-    /// 2. HitEnemy: ÊÇ Player ¶Ü·´Ê±µÄ¹¦ÄÜ.
-    /// 3. HitNothing: ÊÇÊ¯Í·ÂäµØÊ±µÄ×´Ì¬
+    /// Ê¯Í·Óµï¿½ï¿½3ï¿½ï¿½×´Ì¬:
+    /// 1. HitPlayer: Ê¯Í·ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½Ê¯Í·, Ä¿ï¿½ï¿½ï¿½ï¿½Player, ï¿½ï¿½CollisionEnter (ï¿½ï¿½ÎªÊ¯Í·Óµï¿½Ð¸ï¿½ï¿½ï¿½.) Ê±, ï¿½Ð¶ï¿½
+    /// 2. HitEnemy: ï¿½ï¿½ Player ï¿½Ü·ï¿½Ê±ï¿½Ä¹ï¿½ï¿½ï¿½.
+    /// 3. HitNothing: ï¿½ï¿½Ê¯Í·ï¿½ï¿½ï¿½Ê±ï¿½ï¿½×´Ì¬
     /// </summary>
     public enum RockState { HitPlayer, HitEnemy, HitNothing }
-    // Ê¯Í·ÓµÓÐ¸ÕÌå, ¸ÕÌå»áÔÚ
+    // Ê¯Í·Óµï¿½Ð¸ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private Rigidbody rb;
 
-    // Ê¯Í·Ê²Ã´Ê±ºò×´Ì¬³É HitNothing?
-    // Ê¹ÓÃ RB.velocity ÅÐ¶Ï, ÓÃ¸ÕÌå, ÎïÀíÏµÍ³!!! ÐèÒªÓÃ fixUp();
+    // Ê¯Í·Ê²Ã´Ê±ï¿½ï¿½×´Ì¬ï¿½ï¿½ HitNothing?
+    // Ê¹ï¿½ï¿½ RB.velocity ï¿½Ð¶ï¿½, ï¿½Ã¸ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ÏµÍ³!!! ï¿½ï¿½Òªï¿½ï¿½ fixUp();
     public RockState rockState;
 
     public GameObject breakEffect; 
@@ -30,22 +30,22 @@ public class Rock : MonoBehaviour
     public GameObject target;
     private Vector3 direction;
 
-    // Rock ÊÇÍ¨¹ý Instantiate ·½·¨´´½¨µÄ,
-    // Òò´ËÔÚ Update µÚÒ»´Îµ÷ÓÃÖ®Ç°, ÏÈµ÷ÓÃÒ»´Î Start() ·½·¨
-    // ÓÉÓÚÕâ¸ö¶ÔÏó, ²¢²»ÊÇÒ»¿ªÊ¼´æÔÚÓÚSceneÖÐ
+    // Rock ï¿½ï¿½Í¨ï¿½ï¿½ Instantiate ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ Update ï¿½ï¿½Ò»ï¿½Îµï¿½ï¿½ï¿½Ö®Ç°, ï¿½Èµï¿½ï¿½ï¿½Ò»ï¿½ï¿½ Start() ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sceneï¿½ï¿½
     private void Start()
     {
         rockState = RockState.HitPlayer;
 
         rb = GetComponent<Rigidbody>();
-        rb.velocity = Vector3.one; // ÎªÁË·ÀÖ¹ÎïÀíËÙ¶ÈÐ¡ÓÚ1fÊ±, ×´Ì¬Îª HitNothing ÏûÊ§...
+        rb.velocity = Vector3.one; // Îªï¿½Ë·ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½Ð¡ï¿½ï¿½1fÊ±, ×´Ì¬Îª HitNothing ï¿½ï¿½Ê§...
         FlyToTarget();
     }
 
     private void FixedUpdate()
     {
-        // ÕâÀïÓÃ 1 Õâ¸öãÐÖµ, ÊÇÒòÎªºÜ¶àÊ±, Ê¯Í·²»»áÍêÈ«¾²Ö¹
-        // ²¢ÇÒÊ¯Í·ÔÚÉú³ÉÊ±, ³õÊ¼ËÙ¶ÈÊÇ0, ¿ÉÄÜÖ±½ÓÍ£Ö¹ÁË... ÐèÒª¸øÒ»¸ö³õÊ¼ËÙ¶È
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½ï¿½Öµ, ï¿½ï¿½ï¿½ï¿½Îªï¿½Ü¶ï¿½Ê±, Ê¯Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½Ö¹
+        // ï¿½ï¿½ï¿½ï¿½Ê¯Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±, ï¿½ï¿½Ê¼ï¿½Ù¶ï¿½ï¿½ï¿½0, ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½Í£Ö¹ï¿½ï¿½... ï¿½ï¿½Òªï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Ù¶ï¿½
         if(rb.velocity.sqrMagnitude < 1f)
         {
             rockState = RockState.HitNothing;
@@ -54,7 +54,7 @@ public class Rock : MonoBehaviour
 
     public void FlyToTarget()
     {
-        // µ÷ÓÃÕâ¸ö·½·¨µÄÊ±»ú, ÓÐ¿ÉÄÜÊÇÔÚUnity LoopµÄ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½, ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Unity Loopï¿½ï¿½
         if(target == null)
         {
             target = FindObjectOfType<PlayerController>().gameObject;
@@ -64,7 +64,7 @@ public class Rock : MonoBehaviour
         rb.AddForce(direction * force, ForceMode.Impulse);
     }
 
-    // ÔÚ·¢ÉúÅö×²Ê±¸üÐÂ, ÕâÀï¿ÉÄÜÐèÒª¸ù¾ÝÊ¯Í·±¾ÉíµÄ×´Ì¬È¥¸üÐÂ
+    // ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½×²Ê±ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ê¯Í·ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬È¥ï¿½ï¿½ï¿½ï¿½
     private void OnCollisionEnter(Collision other)
     {
         switch (rockState)

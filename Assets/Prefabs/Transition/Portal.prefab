@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 900738943}
   m_Layer: 0
   m_Name: Portal
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -112,8 +112,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 0.8200102}
-  m_Center: {x: 0, y: 0, z: -0.004781246}
+  m_Size: {x: 1, y: 0.33333334, z: 0.8200102}
+  m_Center: {x: 0, y: -0.33333334, z: -0.004781246}
 --- !u!1 &5230103605894776482
 GameObject:
   m_ObjectHideFlags: 0

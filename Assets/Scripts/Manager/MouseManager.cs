@@ -58,6 +58,9 @@ public class MouseManager : Singleton<MouseManager>
                 case "Enemy":
                     Cursor.SetCursor(Attack, new Vector2(16, 16), CursorMode.Auto);
                     break;
+                case "Portal":
+                    Cursor.SetCursor(Doorway, new Vector2(16, 16), CursorMode.Auto);
+                    break;
             }
         }
     }
@@ -84,6 +87,11 @@ public class MouseManager : Singleton<MouseManager>
             if (hitInfo.collider.gameObject.CompareTag("Attackable"))
             {
                 OnAttackClick?.Invoke(hitInfo.collider.gameObject);
+            }
+
+            if(hitInfo.collider.gameObject.CompareTag("Portal"))
+            {
+                OnMouseClick?.Invoke(hitInfo.point);
             }
 
         }

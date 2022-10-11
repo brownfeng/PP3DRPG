@@ -39,6 +39,12 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.RegisterPlayer(characterStats);
     }
 
+    private void OnDisable()
+    {
+        MouseManager.Instance.OnMouseClick -= MoveToTarget;
+        MouseManager.Instance.OnAttackClick -= EventAttack;
+    }
+
     private void Update()
     {
         isDead = characterStats.CurrentHealth == 0;

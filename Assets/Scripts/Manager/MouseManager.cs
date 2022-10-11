@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -7,9 +7,9 @@ using Unity.VisualScripting;
 [System.Serializable]
 public class MouseManager : Singleton<MouseManager>
 {
-    // ÉùÃ÷Ò»¸ö UnityEvent ÊÂ¼ş, ¸ÃÊÂ¼şÔÚ·¢ÉúÊ±, »á½ÓÊÜÒ»¸ö Vector3 µÄ±äÁ¿
-    // ×¢Òâ, ÔÚµ÷ÓÃÕâ¸öUnityEventÊ±, ¿ÉÒÔÊ¹ÓÃ ?.Invoke(arg1) ·½Ê½...
-    // ÁíÍâ, ÓÉÓÚEventVector3 Ê¹ÓÃ [System.Serializable] ½øĞĞÉùÃ÷, Òò´ËÔÚUnityEditorÖĞ, »á±©Â¶ÅäÖÃ»Øµ÷º¯ÊıµÄÑ¡Ïî!!!
+    // å£°æ˜ä¸€ä¸ª UnityEvent äº‹ä»¶, è¯¥äº‹ä»¶åœ¨å‘ç”Ÿæ—¶, ä¼šæ¥å—ä¸€ä¸ª Vector3 çš„å˜é‡
+    // æ³¨æ„, åœ¨è°ƒç”¨è¿™ä¸ªUnityEventæ—¶, å¯ä»¥ä½¿ç”¨ ?.Invoke(arg1) æ–¹å¼...
+    // å¦å¤–, ç”±äºEventVector3 ä½¿ç”¨ [System.Serializable] è¿›è¡Œå£°æ˜, å› æ­¤åœ¨UnityEditorä¸­, ä¼šæš´éœ²é…ç½®å›è°ƒå‡½æ•°çš„é€‰é¡¹!!!
     public event Action<Vector3> OnMouseClick;
 
     public event Action<GameObject> OnAttackClick;
@@ -30,31 +30,33 @@ public class MouseManager : Singleton<MouseManager>
         MouseControl();
     }
 
-    private void SetCursorTexture() {
-        // 1. Ê¹ÓÃ Camera.main ±íÊ¾, ´Óµ±Ç°Scence³¡¾°ÖĞ, »ñÈ¡ Tag == "MainCamera" µÄGameObject
-        // 2. Input.mousePosition ·µ»Øµ±Ç°Êó±êÔÚÆÁÄ»ÖĞµÄÏñËØ×ø±ê!!!!
-        // 3. ScreenPointToRay(v3) ´Ó MainCamera µ½ ScreenPoint ·¢ÉäÒ»Ìõ Ray ÉäÏß
-        // 4. Ê¹ÓÃ Debug.DrawRay »ØÖ´ÕâÌõÉäÏß!!! ÔÚ Scene ´°¿ÚÄÜ¿´µ½(Game´°¿Ú¿´²»µ½)
-        // 5. Physics.RayCast Ïò³¡¾°ÖĞµÄËùÓĞÅö×²Ìå·¢ËÍÒ»ÌõÉäÏß!!! Ö¸¶¨ÉäÏßµÄ origin, direction, maxDistance
+    private void SetCursorTexture()
+    {
+        // 1. ä½¿ç”¨ Camera.main è¡¨ç¤º, ä»å½“å‰Scenceåœºæ™¯ä¸­, è·å– Tag == "MainCamera" çš„GameObject
+        // 2. Input.mousePosition è¿”å›å½“å‰é¼ æ ‡åœ¨å±å¹•ä¸­çš„åƒç´ åæ ‡!!!!
+        // 3. ScreenPointToRay(v3) ä» MainCamera åˆ° ScreenPoint å‘å°„ä¸€æ¡ Ray å°„çº¿
+        // 4. ä½¿ç”¨ Debug.DrawRay å›æ‰§è¿™æ¡å°„çº¿!!! åœ¨ Scene çª—å£èƒ½çœ‹åˆ°(Gameçª—å£çœ‹ä¸åˆ°)
+        // 5. Physics.RayCast å‘åœºæ™¯ä¸­çš„æ‰€æœ‰ç¢°æ’ä½“å‘é€ä¸€æ¡å°„çº¿!!! æŒ‡å®šå°„çº¿çš„ origin, direction, maxDistance
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction, Color.red);
 
-        // ÎÊÌâ: Ê¹ÓÃÊó±êÉäÏßÊ±, Èç¹ûÒªµã»÷Ê÷Ä¾ºóÃæµÄµØ°å, ÔòÓÉÓÚÊ÷Ä¾»áµ²×¡Êó±êÎ»ÖÃ·¢ËÍµÄÉäÏß, Òò´ËÓĞÁ½ÖÖ½â¾ö·½·¨:
-        // 1. Ö±½ÓÔÚ³¡¾°ÖĞÑ¡ÔñËùÓĞµÄÊ÷Ä¾, Ñ¡ÔñËüÃÇµÄLayerÎª 2 Ignore Rycast -- Ò²¾ÍÊÇºöÂÔËùÓĞµÄÉäÏß
-        // 2. ÔÚ Physics.Raycast, ÎÒÃÇ»á¸ù¾İÉäÏßÓë collider µÄ½Ó´¥, ¿ÉÒÔ½«³¡¾°ÖĞµÄÊ÷Ä¾µÄ MeshCollider disable.
-        //  Ò»°ãÑ¡ÓÃ 2, Ê¹ÓÃNavMesh µ¼º½Çé¿öÏÂ, Ò»°ã²»»áºÍÊ÷Ä¾Åö×²´©Ä£ (ÓÅÊÆ: ºóĞø¿ª·¢ÖĞ,Èç¹ûÓĞ¶«Î÷±¬³öÀ´, ÄÇÃ´ºÍÊ÷Ä¾²»»á²úÉúÅö×²)
+        // é—®é¢˜: ä½¿ç”¨é¼ æ ‡å°„çº¿æ—¶, å¦‚æœè¦ç‚¹å‡»æ ‘æœ¨åé¢çš„åœ°æ¿, åˆ™ç”±äºæ ‘æœ¨ä¼šæŒ¡ä½é¼ æ ‡ä½ç½®å‘é€çš„å°„çº¿, å› æ­¤æœ‰ä¸¤ç§è§£å†³æ–¹æ³•:
+        // 1. ç›´æ¥åœ¨åœºæ™¯ä¸­é€‰æ‹©æ‰€æœ‰çš„æ ‘æœ¨, é€‰æ‹©å®ƒä»¬çš„Layerä¸º 2 Ignore Rycast -- ä¹Ÿå°±æ˜¯å¿½ç•¥æ‰€æœ‰çš„å°„çº¿
+        // 2. åœ¨ Physics.Raycast, æˆ‘ä»¬ä¼šæ ¹æ®å°„çº¿ä¸ collider çš„æ¥è§¦, å¯ä»¥å°†åœºæ™¯ä¸­çš„æ ‘æœ¨çš„ MeshCollider disable.
+        //  ä¸€èˆ¬é€‰ç”¨ 2, ä½¿ç”¨NavMesh å¯¼èˆªæƒ…å†µä¸‹, ä¸€èˆ¬ä¸ä¼šå’Œæ ‘æœ¨ç¢°æ’ç©¿æ¨¡ (ä¼˜åŠ¿: åç»­å¼€å‘ä¸­,å¦‚æœæœ‰ä¸œè¥¿çˆ†å‡ºæ¥, é‚£ä¹ˆå’Œæ ‘æœ¨ä¸ä¼šäº§ç”Ÿç¢°æ’)
 
-        // ÎÊÌâ: Èç¹ûĞèÒªµã»÷µĞÈË, ĞèÒªÔÚ Enemy ÉíÉÏÔö¼Ó Box Collider, ·ñÔòÊó±êÉäÏßÎŞ·¨Ñ¡ÖĞ, ²¢ÇÒÍ³Ò»Ôö¼ÓTag 
-        
-        // ÎÊÌâ: Èç¹ûĞèÒªµĞÈËÒ²ĞèÒªÆô¶¯ÕÚµ²ÌŞ³ı, ĞèÒªÔÚ URP Render ÖĞÅäÖÃ!!!
-        if (Physics.Raycast(ray, out hitInfo)) { 
-            /// ÇĞ»»Êó±êÌùÍ¼
-            switch(hitInfo.collider.tag)
+        // é—®é¢˜: å¦‚æœéœ€è¦ç‚¹å‡»æ•Œäºº, éœ€è¦åœ¨ Enemy èº«ä¸Šå¢åŠ  Box Collider, å¦åˆ™é¼ æ ‡å°„çº¿æ— æ³•é€‰ä¸­, å¹¶ä¸”ç»Ÿä¸€å¢åŠ Tag 
+
+        // é—®é¢˜: å¦‚æœéœ€è¦æ•Œäººä¹Ÿéœ€è¦å¯åŠ¨é®æŒ¡å‰”é™¤, éœ€è¦åœ¨ URP Render ä¸­é…ç½®!!!
+        if (Physics.Raycast(ray, out hitInfo))
+        {
+            /// åˆ‡æ¢é¼ æ ‡è´´å›¾
+            switch (hitInfo.collider.tag)
             {
                 case "Ground":
                     Cursor.SetCursor(Target, new Vector2(16, 16), CursorMode.Auto);
-                  break;
+                    break;
                 case "Enemy":
                     Cursor.SetCursor(Attack, new Vector2(16, 16), CursorMode.Auto);
                     break;
@@ -66,20 +68,21 @@ public class MouseManager : Singleton<MouseManager>
     }
 
     /// <summary>
-    /// ÔÚ°´ÏÂÊó±ê×ó¼üµÄÊ±, ¸ù¾İÊó±êÉäÏßÖ¸ÏòµÄÅö×²Ìå±È½Ï Tag, È»ºó´¥·¢¶ÔÍâµÄÊó±êµã»÷»Øµ÷·½·¨
+    /// åœ¨æŒ‰ä¸‹é¼ æ ‡å·¦é”®çš„æ—¶, æ ¹æ®é¼ æ ‡å°„çº¿æŒ‡å‘çš„ç¢°æ’ä½“æ¯”è¾ƒ Tag, ç„¶åè§¦å‘å¯¹å¤–çš„é¼ æ ‡ç‚¹å‡»å›è°ƒæ–¹æ³•
     /// </summary>
-    private void MouseControl() { 
-        if(Input.GetMouseButtonDown(0) && hitInfo.collider != null)
+    private void MouseControl()
+    {
+        if (Input.GetMouseButtonDown(0) && hitInfo.collider != null)
         {
-            // GetMouseButton(0) ·µ»ØÊÇ·ñ°´ÏÂÁË¸ø¶¨µÄÊó±ê°´Å¥¡£
-            // hitInfo ÊÇÒ»¸ö RaycastHit ĞÅÏ¢, ÓÃÀ´ÃèÊöµ±Ç°·şÎñÖĞµÄÄÚÈİ
+            // GetMouseButton(0) è¿”å›æ˜¯å¦æŒ‰ä¸‹äº†ç»™å®šçš„é¼ æ ‡æŒ‰é’®ã€‚
+            // hitInfo æ˜¯ä¸€ä¸ª RaycastHit ä¿¡æ¯, ç”¨æ¥æè¿°å½“å‰æœåŠ¡ä¸­çš„å†…å®¹
             if (hitInfo.collider.gameObject.CompareTag("Ground"))
             {
-                // ×¢Òâ, µ÷ÓÃÊ±, ¿ÉÒÔÊ¹ÓÃ ?.Invoke(arg1) ·½Ê½...
+                // æ³¨æ„, è°ƒç”¨æ—¶, å¯ä»¥ä½¿ç”¨ ?.Invoke(arg1) æ–¹å¼...
                 OnMouseClick?.Invoke(hitInfo.point);
             }
 
-            if(hitInfo.collider.gameObject.CompareTag("Enemy"))
+            if (hitInfo.collider.gameObject.CompareTag("Enemy"))
             {
                 OnAttackClick?.Invoke(hitInfo.collider.gameObject);
             }
@@ -89,7 +92,7 @@ public class MouseManager : Singleton<MouseManager>
                 OnAttackClick?.Invoke(hitInfo.collider.gameObject);
             }
 
-            if(hitInfo.collider.gameObject.CompareTag("Portal"))
+            if (hitInfo.collider.gameObject.CompareTag("Portal"))
             {
                 OnMouseClick?.Invoke(hitInfo.point);
             }

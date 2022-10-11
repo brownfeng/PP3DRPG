@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,21 +8,21 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private CharacterStats characterStats;
 
-    // Player Ö÷¶¯¹¥»÷µÄ GO
+    // Player ä¸»åŠ¨æ”»å‡»çš„ GO
     private GameObject attackTarget;
     private float lastAttackTime;
 
     private bool isDead;
 
     /// <summary>
-    /// »º´æÄ¬ÈÏµÄ stopDistance
+    /// ç¼“å­˜é»˜è®¤çš„ stopDistance
     /// </summary>
     private float stopDistance;
 
     private void Awake()
     {
         // MouseManager.Instance.OnMouseClick += OnMouseClick; 
-        // ÒòÎªÕâÀïµÄ MouseManager.Instance ¿ÉÄÜÎª¿Õ
+        // å› ä¸ºè¿™é‡Œçš„ MouseManager.Instance å¯èƒ½ä¸ºç©º
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         characterStats = GetComponent<CharacterStats>();
@@ -30,26 +30,42 @@ public class PlayerController : MonoBehaviour
         stopDistance = agent.stoppingDistance;
     }
 
-    private void Start()
+    /// <summary>
+    /// æ³¨æ„, OnEnable/OnDisable  ä¸­æ³¨å†Œ/åæ³¨å†Œ MouseManager å›è°ƒ, å¯ä»¥å¾ˆæ–¹ä¾¿æˆ‘ä»¬åœ¨åœºæ™¯ä¸­
+    /// 1. å…ˆéšè—Player, åœ¨æ¸¸æˆå¯åŠ¨ä»¥åå†æ‰“å¼€è§’è‰²!!! æ–¹ä¾¿è°ƒè¯•
+    /// 2. åœ¨åˆ‡æ¢åœºæ™¯æ—¶, éœ€è¦é‡æ–°ç”Ÿæˆæ–°çš„Player, è¿™æ ·æ³¨å†Œçš„è¯ä¹Ÿå¾ˆæ–¹ä¾¿
+    /// 3. è¯·æ³¨æ„åœ¨ OnDisable ä¸­ä¼šå…ˆåˆ¤æ–­ MouseManager.IsInitialized æ˜¯å¦åˆå§‹åŒ–å®Œæˆ!!!
+    /// </summary>
+    private void OnEnable()
     {
         MouseManager.Instance.OnMouseClick += MoveToTarget;
         MouseManager.Instance.OnAttackClick += EventAttack;
-
-        // ÔÚPlayer Start Ê±, ÔÚGameManagerÖĞ×¢²áÎ¨Ò»µÄPlayer
-        GameManager.Instance.RegisterPlayer(characterStats);
     }
 
     private void OnDisable()
     {
+        // æ³¨æ„, æœ‰å¯èƒ½æ‰‹åŠ¨æƒ…å†µ, MouseManager æ²¡æœ‰ç”Ÿæˆ
+        if (!MouseManager.IsInitialized)
+            return;
         MouseManager.Instance.OnMouseClick -= MoveToTarget;
         MouseManager.Instance.OnAttackClick -= EventAttack;
+    }
+
+    /// <summary>
+    /// åœ¨Start() æ–¹æ³•ä¸­, å°† Player æ³¨å†Œåˆ°GameManagerä¸­
+    /// </summary>
+    private void Start()
+    {
+        // FIXME: å¦‚æœä»ä¸»èœå•åŠ è½½æ¸¸æˆ, è¿™æ¡ä»£ç ä¹Ÿä¸åº”è¯¥æ”¾åœ¨ Start() æ–¹æ³•ä¸­
+        // åœ¨Player Start æ—¶, åœ¨GameManagerä¸­æ³¨å†Œå”¯ä¸€çš„Player
+        GameManager.Instance.RegisterPlayer(characterStats);
     }
 
     private void Update()
     {
         isDead = characterStats.CurrentHealth == 0;
 
-        if(isDead)
+        if (isDead)
         {
             GameManager.Instance.NotifyObservers();
         }
@@ -65,24 +81,25 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Êó±êµã»÷ÊÂ¼ş, µã»÷µØ°å, ´¥·¢ÒÆ¶¯µ½ target
+    /// é¼ æ ‡ç‚¹å‡»äº‹ä»¶, ç‚¹å‡»åœ°æ¿, è§¦å‘ç§»åŠ¨åˆ° target
     /// </summary>
     /// <param name="target"></param>
-    private void MoveToTarget(Vector3 target) {
+    private void MoveToTarget(Vector3 target)
+    {
 
         StopAllCoroutines();
         if (isDead)
         {
             return;
         }
-        // µ±µã»÷ÒÆ¶¯Ê±, ÄÜ100%È·±£ÒÆ¶¯µ½Ö¸¶¨Î»ÖÃ, ¶øµã»÷¹¥»÷½ÇÉ«Ê±, ĞèÒªÉèÖÃ³ÉCharacterData.attackRange
+        // å½“ç‚¹å‡»ç§»åŠ¨æ—¶, èƒ½100%ç¡®ä¿ç§»åŠ¨åˆ°æŒ‡å®šä½ç½®, è€Œç‚¹å‡»æ”»å‡»è§’è‰²æ—¶, éœ€è¦è®¾ç½®æˆCharacterData.attackRange
         agent.stoppingDistance = stopDistance;
         agent.isStopped = false;
         agent.destination = target;
     }
 
     /// <summary>
-    /// Êó±êµã»÷ÊÂ¼ş, µã»÷¹¥»÷¹ÖÎï, ÏÈËø¶¨Ä¿±ê, ¿ªÆôĞ­³Ì³ÖĞø´¦ÀíËø¶¨µÄÄ¿±ê
+    /// é¼ æ ‡ç‚¹å‡»äº‹ä»¶, ç‚¹å‡»æ”»å‡»æ€ªç‰©, å…ˆé”å®šç›®æ ‡, å¼€å¯åç¨‹æŒç»­å¤„ç†é”å®šçš„ç›®æ ‡
     /// </summary>
     /// <param name="target"></param>
     private void EventAttack(GameObject target)
@@ -96,7 +113,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log($"target {target}");
             attackTarget = target;
-            // ¼ÆËãPlayer µ±Ç°µÄ¹¥»÷ÊÇ·ñÊÇ±©»÷
+            // è®¡ç®—Player å½“å‰çš„æ”»å‡»æ˜¯å¦æ˜¯æš´å‡»
             characterStats.isCritical = Random.value < characterStats.CriticalChance;
             StartCoroutine(MoveToAttackTarget());
         }
@@ -104,57 +121,59 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator MoveToAttackTarget()
     {
-        // Ğ­³ÌÅĞ¶Ï¶¯×÷Ö®Ç°, ÏÈÅĞ¶Ï½ÇÉ«ÊÇ·ñÍ£Ö¹ÁËÒÆ¶¯
+        // åç¨‹åˆ¤æ–­åŠ¨ä½œä¹‹å‰, å…ˆåˆ¤æ–­è§’è‰²æ˜¯å¦åœæ­¢äº†ç§»åŠ¨
         agent.isStopped = false;
-        /// µ±¹¥»÷Ò»Ğ©½ÇÉ«Ê±, Èç¹û½ÇÉ«Ä£ĞÍºÜ´ó. ¿ÉÄÜ¹¥»÷²»µ½...
+        /// å½“æ”»å‡»ä¸€äº›è§’è‰²æ—¶, å¦‚æœè§’è‰²æ¨¡å‹å¾ˆå¤§. å¯èƒ½æ”»å‡»ä¸åˆ°...
         agent.stoppingDistance = characterStats.attackData.attackRange;
 
-        // 1. ÏÈ½« player ×ªÏò, ³¯Ïò enemy
-        // 2. Æô¶¯Ğ­³Ì, ÅĞ¶Ï player Óë enemy ¾àÀë
+        // 1. å…ˆå°† player è½¬å‘, æœå‘ enemy
+        // 2. å¯åŠ¨åç¨‹, åˆ¤æ–­ player ä¸ enemy è·ç¦»
         transform.LookAt(attackTarget.transform);
 
-        // FIXME: ¾àÀëÅĞ¶Ï, ºóĞø¸ù¾İÎäÆ÷´óĞ¡, ¹ÖÎïÖÖÀà²»Í¬½øĞĞµ÷Õû(ÓĞµÄ¹ÖÎïÌå»ıºÜ´ó, Ã»°ì·¨ÍêÈ«×ßµ½¾àÀëÎª 1, »á·¢ÉúÅö×²)
-        // ³ÖĞøÅĞ¶Ï player/enmey µÄ¾àÀë, Èç¹û´óÓÚ¾àÀëÎª¹¥»÷¾àÀë! ¼ÌĞøÒÆ¶¯!!! ·ñÔò, ´¥·¢¹¥»÷¶¯»­
-        while(Vector3.Distance(transform.position, attackTarget.transform.position) > characterStats.AttackRange)
+        // FIXME: è·ç¦»åˆ¤æ–­, åç»­æ ¹æ®æ­¦å™¨å¤§å°, æ€ªç‰©ç§ç±»ä¸åŒè¿›è¡Œè°ƒæ•´(æœ‰çš„æ€ªç‰©ä½“ç§¯å¾ˆå¤§, æ²¡åŠæ³•å®Œå…¨èµ°åˆ°è·ç¦»ä¸º 1, ä¼šå‘ç”Ÿç¢°æ’)
+        // æŒç»­åˆ¤æ–­ player/enmey çš„è·ç¦», å¦‚æœå¤§äºè·ç¦»ä¸ºæ”»å‡»è·ç¦»! ç»§ç»­ç§»åŠ¨!!! å¦åˆ™, è§¦å‘æ”»å‡»åŠ¨ç”»
+        while (Vector3.Distance(transform.position, attackTarget.transform.position) > characterStats.AttackRange)
         {
             agent.destination = attackTarget.transform.position;
             yield return null;
         }
 
-        // Ö´ĞĞ¹¥»÷: ÏÈÍ£Ö¹ÒÆ¶¯, ÅĞ¶Ï¼ÆÊ±Æ÷(CD), ²¥·Å¹¥»÷¶¯»­
+        // æ‰§è¡Œæ”»å‡»: å…ˆåœæ­¢ç§»åŠ¨, åˆ¤æ–­è®¡æ—¶å™¨(CD), æ’­æ”¾æ”»å‡»åŠ¨ç”»
         agent.isStopped = true;
 
-        if(lastAttackTime < 0)
+        if (lastAttackTime < 0)
         {
             anim.SetBool("Critical", characterStats.isCritical);
 
-            // ¹¥»÷µÄ¶¯»­»ù±¾¶¼Ê¹ÓÃ Trigger:
-            // ÔÚÇĞ»»µ½¹¥»÷¶¯»­Ê±: ²»ĞèÒª TransitionTime
-            // ÔÚExit ¹¥»÷¶¯»­Ê±, ĞèÒª hasExit Time, ²¢ÇÒĞèÒªÍË³ö¶¯»­Ê±¼äÎª1(Ò»°ãÀ´Ëµ,½«¹¥»÷¶¯»­²¥·ÅÍê³É)
+            // æ”»å‡»çš„åŠ¨ç”»åŸºæœ¬éƒ½ä½¿ç”¨ Trigger:
+            // åœ¨åˆ‡æ¢åˆ°æ”»å‡»åŠ¨ç”»æ—¶: ä¸éœ€è¦ TransitionTime
+            // åœ¨Exit æ”»å‡»åŠ¨ç”»æ—¶, éœ€è¦ hasExit Time, å¹¶ä¸”éœ€è¦é€€å‡ºåŠ¨ç”»æ—¶é—´ä¸º1(ä¸€èˆ¬æ¥è¯´,å°†æ”»å‡»åŠ¨ç”»æ’­æ”¾å®Œæˆ)
             anim.SetTrigger("Attack");
 
-            // ÖØÖÃÀäÈ´Ê±¼ä, ºóĞøÅäÖÃ
+            // é‡ç½®å†·å´æ—¶é—´, åç»­é…ç½®
             lastAttackTime = characterStats.CoolDown;
         }
     }
 
-    // Animator Event, Ö÷¶¯´¥·¢±©»÷¶¯»­, »áÈÃ targetStats ·¢ÉúºóÑö¶¯»­
-    // ÕâÀïÈÏÎª½ÇÉ«¼È¿ÉÒÔ¹¥»÷Ê¯Í·, Ò²¿ÉÒÔ¹¥»÷Ê¯Í·, ÔÚ¹¥»÷Ê¯Í·µÄÊ±, ÀàËÆ¶Ü·´Ğ§¹û
-    // »ùÓÚÕâÖÖÀíÂÛ, ÎÒÃÇĞèÒª·ÖÒ»¸ö´óÀà, Attackable ±êÇ©¸øÊ¯Í·, ÕâÀï¾ÍÄÜÅĞ¶Ï¾¿¾¹¹¥»÷µÄÊÇÊ²Ã´
+    // Animator Event, ä¸»åŠ¨è§¦å‘æš´å‡»åŠ¨ç”», ä¼šè®© targetStats å‘ç”Ÿåä»°åŠ¨ç”»
+    // è¿™é‡Œè®¤ä¸ºè§’è‰²æ—¢å¯ä»¥æ”»å‡»çŸ³å¤´, ä¹Ÿå¯ä»¥æ”»å‡»çŸ³å¤´, åœ¨æ”»å‡»çŸ³å¤´çš„æ—¶, ç±»ä¼¼ç›¾åæ•ˆæœ
+    // åŸºäºè¿™ç§ç†è®º, æˆ‘ä»¬éœ€è¦åˆ†ä¸€ä¸ªå¤§ç±», Attackable æ ‡ç­¾ç»™çŸ³å¤´, è¿™é‡Œå°±èƒ½åˆ¤æ–­ç©¶ç«Ÿæ”»å‡»çš„æ˜¯ä»€ä¹ˆ
     private void Hit()
     {
         if (attackTarget.CompareTag("Attackable"))
         {
-            if(attackTarget.GetComponent<Rock>())
+            if (attackTarget.GetComponent<Rock>())
             {
                 attackTarget.GetComponent<Rock>().rockState = Rock.RockState.HitEnemy;
                 attackTarget.GetComponent<Rigidbody>().velocity = Vector3.one;
                 attackTarget.GetComponent<Rigidbody>().AddForce(transform.forward * 20, ForceMode.Impulse);
             }
-        }else {
+        }
+        else
+        {
             var targetStats = attackTarget.GetComponent<CharacterStats>();
-            // Player ÊÇÖ÷¶¯¹¥»÷¹ÖÎï, Òò´ËÒ»¶¨ÓµÓĞ target
+            // Player æ˜¯ä¸»åŠ¨æ”»å‡»æ€ªç‰©, å› æ­¤ä¸€å®šæ‹¥æœ‰ target
             targetStats.TakeDamage(characterStats, targetStats);
         }
-    } 
+    }
 }

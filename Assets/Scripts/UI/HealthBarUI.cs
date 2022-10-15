@@ -1,40 +1,40 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ×¢Òâ, Õâ¸ö Script »á¹ÒÔØµ½Ã¿¸öĞèÒª ÑªÌõµÄ¶ÔÏóÉÏ
+/// æ³¨æ„, è¿™ä¸ª Script ä¼šæŒ‚è½½åˆ°æ¯ä¸ªéœ€è¦ è¡€æ¡çš„å¯¹è±¡ä¸Š
 /// 
-/// Òò´ËĞèÒªÔÚÖ¸¶¨µÄÉúÃüÖÜÆÚÖĞ, ´´½¨Õâ¸öÑªÌõ
+/// å› æ­¤éœ€è¦åœ¨æŒ‡å®šçš„ç”Ÿå‘½å‘¨æœŸä¸­, åˆ›å»ºè¿™ä¸ªè¡€æ¡
 /// </summary>
 public class HealthBarUI : MonoBehaviour
 {
-    // ×¢Òâ, ÔÚ Unity-Editor ÖĞ, Ö±½Ó½« Bar Holder ÍÏµ½ Script ÖĞ.
-    // ¿ÉÄÜÊÇÔÚ OnEnable Ê±, ´´½¨Õâ¸ö Canvas
+    // æ³¨æ„, åœ¨ Unity-Editor ä¸­, ç›´æ¥å°† Bar Holder æ‹–åˆ° Script ä¸­.
+    // å¯èƒ½æ˜¯åœ¨ OnEnable æ—¶, åˆ›å»ºè¿™ä¸ª Canvas
     public GameObject healthUIPrefab;
 
-    // Enemy Í·¶¥µÄ×ø±êÎ»ÖÃ(³õÊ¼»¯µÄÊ±ºòµÄÎ»ÖÃ).
+    // Enemy å¤´é¡¶çš„åæ ‡ä½ç½®(åˆå§‹åŒ–çš„æ—¶å€™çš„ä½ç½®).
     public Transform barPoint;
 
-    // ÊÇ·ñÒ»Ö±¿É¼û
+    // æ˜¯å¦ä¸€ç›´å¯è§
     public bool alwaysVisible;
 
     public float visiableTime;
 
     private float timeleft;
-    // ÑªÌõµÄ»¬¶¯Ìõ
+    // è¡€æ¡çš„æ»‘åŠ¨æ¡
     Image healthSlider;
 
-    // ÎªÁËÉú³Éµ±Ç°µÄ HealthBar ÊµÌåÒÔºó, ½«UIBar µ±Ç°Î»ÖÃÉèÖÃ³É barPoint Î»ÖÃ
+    // ä¸ºäº†ç”Ÿæˆå½“å‰çš„ HealthBar å®ä½“ä»¥å, å°†UIBar å½“å‰ä½ç½®è®¾ç½®æˆ barPoint ä½ç½®
     Transform UIbar;
 
-    // ĞèÒªÉãÏñ»úÎ»ÖÃ, ÒòÎªĞèÒªÊµÊ±,½« Bar µÄ Transform µÄ forward ·½ÏòÉèÖÃ³ÉÃæÏòÏà»ú
+    // éœ€è¦æ‘„åƒæœºä½ç½®, å› ä¸ºéœ€è¦å®æ—¶,å°† Bar çš„ Transform çš„ forward æ–¹å‘è®¾ç½®æˆé¢å‘ç›¸æœº
     Transform cam;
 
     CharacterStats currentStats;
 
-    // ÒòÎªÕâ¸ö HealthBar ÊÇ¹ÒÔØÔÚÃ¿¸ö Enemy ÉíÉÏ, Òò´ËÃ¿¸ö Enemy ÉíÉÏ¶¼ÓĞ characterStats
+    // å› ä¸ºè¿™ä¸ª HealthBar æ˜¯æŒ‚è½½åœ¨æ¯ä¸ª Enemy èº«ä¸Š, å› æ­¤æ¯ä¸ª Enemy èº«ä¸Šéƒ½æœ‰ characterStats
     private void Awake()
     {
         currentStats = GetComponent<CharacterStats>();
@@ -44,16 +44,16 @@ public class HealthBarUI : MonoBehaviour
 
     private void OnEnable()
     {
-        // ¿ÉÄÜ³¡¾°ÀïÃæÓĞ¶à¸öÏà»ú
+        // å¯èƒ½åœºæ™¯é‡Œé¢æœ‰å¤šä¸ªç›¸æœº
         cam = Camera.main.transform;
 
-        // ÁíÍâÔÚEnableµÄÊ±ºò, ´´½¨ UIBar... ²¢ÇÒÏÔÊ¾µ½ÎÒÃÇÖ¸¶¨µÄ Canvas ÉÏ
-        // µ«ÊÇ, µ±Ç°³¡¾°¿ÉÄÜÓµÓĞ¶à¸ö Canvas
-        foreach(Canvas canvas in FindObjectsOfType<Canvas>())
+        // å¦å¤–åœ¨Enableçš„æ—¶å€™, åˆ›å»º UIBar... å¹¶ä¸”æ˜¾ç¤ºåˆ°æˆ‘ä»¬æŒ‡å®šçš„ Canvas ä¸Š
+        // ä½†æ˜¯, å½“å‰åœºæ™¯å¯èƒ½æ‹¥æœ‰å¤šä¸ª Canvas
+        foreach (Canvas canvas in FindObjectsOfType<Canvas>())
         {
-            if(canvas.renderMode == RenderMode.WorldSpace)
+            if (canvas.renderMode == RenderMode.WorldSpace)
             {
-                // ×¢Òâ, ÑªÌõĞèÒªÉèÖÃ father canvas transform
+                // æ³¨æ„, è¡€æ¡éœ€è¦è®¾ç½® father canvas transform
                 UIbar = Instantiate(healthUIPrefab, canvas.transform).transform;
                 healthSlider = UIbar.GetChild(0).GetComponent<Image>();
                 UIbar.gameObject.SetActive(alwaysVisible);
@@ -63,8 +63,8 @@ public class HealthBarUI : MonoBehaviour
 
     private void UpdateHealthBar(int currentHealth, int maxHealth)
     {
-        // µ±¹ÖÎïµÄµ±Ç° ÉúÃüÖµ <= 0 Ê±, ĞèÒªÏú»Ù UIbar ¶ÔÏó
-        if(currentHealth <= 0)
+        // å½“æ€ªç‰©çš„å½“å‰ ç”Ÿå‘½å€¼ <= 0 æ—¶, éœ€è¦é”€æ¯ UIbar å¯¹è±¡
+        if (currentHealth <= 0)
         {
             Destroy(UIbar.gameObject);
         }
@@ -77,18 +77,19 @@ public class HealthBarUI : MonoBehaviour
         healthSlider.fillAmount = sliderPercent;
     }
 
-    // ÒÆ¶¯ÑªÌõ. ÀàËÆÓÚÉãÏñ»ú, Ò²Ó¦¸ÃÔÚÉãÏñ»úÔÚäÖÈ¾Íê³ÉÒÔºó¸üĞÂ
+    // ç§»åŠ¨è¡€æ¡. ç±»ä¼¼äºæ‘„åƒæœº, ä¹Ÿåº”è¯¥åœ¨æ‘„åƒæœºåœ¨æ¸²æŸ“å®Œæˆä»¥åæ›´æ–°
     private void LateUpdate()
     {
-        if(UIbar != null)
+        if (UIbar != null)
         {
             UIbar.position = barPoint.position;
             UIbar.forward = -cam.forward;
 
-            if(timeleft <=0 && !alwaysVisible)
+            if (timeleft <= 0 && !alwaysVisible)
             {
                 UIbar.gameObject.SetActive(false);
-            } else
+            }
+            else
             {
                 timeleft -= Time.deltaTime;
             }

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,29 +22,37 @@ public class SceneController : Singleton<SceneController>
         switch (transitionPoint.transitionType)
         {
             case TransitionPoint.TransitionType.SameScene:
-                /// ¿ªÊ¼Ğ­³Ì
+                /// å¼€å§‹åç¨‹
                 StartCoroutine(Transition(SceneManager.GetActiveScene().name, transitionPoint.destinationTag));
                 break;
             case TransitionPoint.TransitionType.DifferentScene:
                 StartCoroutine(Transition(transitionPoint.sceneName, transitionPoint.destinationTag));
                 break;
         }
- 
+
     }
 
     IEnumerator Transition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
-        // TODO: ´«ËÍµÄÊ±ºò, ±£´æÊı¾İ
+        // TODO: ä¼ é€çš„æ—¶å€™, ä¿å­˜æ•°æ®
+        SaveManager.Instance.SavePlayerData();
         // TODO: 
-        if (SceneManager.GetActiveScene().name != sceneName) {
-            // Òì²½¼ÓÔØ³¡¾°
+        if (SceneManager.GetActiveScene().name != sceneName)
+        {
+            // å¼‚æ­¥åŠ è½½åœºæ™¯
             yield return SceneManager.LoadSceneAsync(sceneName);
-            // Òì²½Éú³É½ÇÉ«
+
+            // å¼‚æ­¥ç”Ÿæˆè§’è‰²
             var transform = GetDestination(destinationTag).transform;
             yield return Instantiate(playerPrefab, transform.position, transform.rotation);
+            SaveManager.Instance.LoadPlayerData();
+
+            // å¼‚æ­¥è¯»å–æ•°æ®
             yield break;
-        } else {
-            // ÏàÍ¬³¡¾°
+        }
+        else
+        {
+            // ç›¸åŒåœºæ™¯
             player = GameManager.Instance.playerStats.gameObject;
             playerAgent = player.GetComponent<NavMeshAgent>();
             playerAgent.enabled = false;

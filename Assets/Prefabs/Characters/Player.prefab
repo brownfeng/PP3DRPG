@@ -1594,8 +1594,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2751b9e4b1a54e84a82fc2132fd35dad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  templateData: {fileID: 0}
-  characterData: {fileID: 11400000, guid: ac3599326aeddac4a9e266192de572e3, type: 2}
+  templateData: {fileID: 11400000, guid: ac3599326aeddac4a9e266192de572e3, type: 2}
+  characterData: {fileID: 0}
   attackData: {fileID: 11400000, guid: d5d90585dc2110742b4c2db701dbe314, type: 2}
   isCritical: 0
 --- !u!54 &382007250

@@ -76,4 +76,13 @@ public class SceneController : Singleton<SceneController>
         }
         return null;
     }
+
+
+    IEnumerator LoadLevel(string scene)
+    {
+        if (scene != "")
+        {
+            yield return SceneManager.LoadSceneAsync(scene);
+        }
+    }
 }

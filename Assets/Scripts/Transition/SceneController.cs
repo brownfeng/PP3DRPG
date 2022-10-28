@@ -77,12 +77,44 @@ public class SceneController : Singleton<SceneController>
         return null;
     }
 
+    public void TransitionToLoadGame()
+    {
+        StartCoroutine(LoadLevel(SaveManager.Instance.SceneName));
+    }
 
+    public void TransitionToFirstLevel()
+    {
+        StartCoroutine(LoadLevel("Game"));
+    }
+
+    public void TransitionToMain()
+    {
+        StartCoroutine(LoadMain());
+    }
+
+    // 新的场景. 如果要新的场景, 传入新的场景名称
     IEnumerator LoadLevel(string scene)
     {
         if (scene != "")
         {
             yield return SceneManager.LoadSceneAsync(scene);
+            // 此时当前的 Scene 已经完全加载
+
+            // 找到一个 spawn point
+
+            var transform = GameManager.Instance.GetEntrance();
+            yield return player = Instantiate(playerPrefab, transform.position, transform.rotation
+                );
+
+            // 保存游戏
+            SaveManager.Instance.SavePlayerData();
+            yield break;
         }
+    }
+
+    IEnumerator LoadMain()
+    {
+        yield return SceneManager.LoadSceneAsync("Main");
+        yield break;
     }
 }

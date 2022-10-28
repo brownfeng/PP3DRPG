@@ -40,6 +40,9 @@ public class PlayerController : MonoBehaviour
     {
         MouseManager.Instance.OnMouseClick += MoveToTarget;
         MouseManager.Instance.OnAttackClick += EventAttack;
+
+        // 在Player Start 时, 在GameManager中注册唯一的Player
+        GameManager.Instance.RegisterPlayer(characterStats);
     }
 
     private void OnDisable()
@@ -56,9 +59,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        // FIXME: 如果从主菜单加载游戏, 这条代码也不应该放在 Start() 方法中
-        // 在Player Start 时, 在GameManager中注册唯一的Player
-        GameManager.Instance.RegisterPlayer(characterStats);
+        // 如果需要自己测试, 可以打败这一行, 实际使用时候, 应该放在 OnEnable() 中
+        // GameManager.Instance.RegisterPlayer(characterStats);
+
+        // 角色一开始就去获取自己角色的内容
+        SaveManager.Instance.LoadPlayerData();
     }
 
     private void Update()

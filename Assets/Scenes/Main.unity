@@ -1332,6 +1332,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneController
       objectReference: {fileID: 0}
+    - target: {fileID: 4199349286954386572, guid: 9f5f789ebb9119e4c9dd912e11ec5cf8, type: 3}
+      propertyPath: sceneFaderPrefab
+      value: 
+      objectReference: {fileID: 7527685934562342417, guid: 83a7bb340c163ae4fbbaefde398bac70, type: 3}
     - target: {fileID: 4199349286954386573, guid: 9f5f789ebb9119e4c9dd912e11ec5cf8, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -3562,7 +3566,7 @@ BoxCollider:
   m_GameObject: {fileID: 5230103605624976763}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 0.33333334, z: 0.8200102}
   m_Center: {x: 0, y: -0.33333334, z: -0.004781246}
@@ -11004,12 +11008,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'index_03_l'\n\tTransform 'lowerarm_l'\n\tTransform
-    'root'\n\tTransform 'neck_01'\n\tTransform 'clavicle_l'\n\tTransform 'ring_02_l'\n\tTransform
-    'ball_l'\n\tTransform 'hand_l'\n\tTransform 'ring_01_r'\n\tTransform 'index_03_r'\n\tand
-    more ..."
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0

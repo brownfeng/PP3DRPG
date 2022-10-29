@@ -63,6 +63,10 @@ public class MouseManager : Singleton<MouseManager>
                 case "Portal":
                     Cursor.SetCursor(Doorway, new Vector2(16, 16), CursorMode.Auto);
                     break;
+                default:
+                    Cursor.SetCursor(Arrow, new Vector2(16, 16), CursorMode.Auto);
+
+                    break;
             }
         }
     }

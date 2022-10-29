@@ -4,17 +4,27 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
 
-public class SceneController : Singleton<SceneController>
+public class SceneController : Singleton<SceneController>, IEndGameObserver
 {
     private GameObject player;
     private NavMeshAgent playerAgent;
 
+    public SceneFader sceneFaderPrefab;
     public GameObject playerPrefab;
+
+
+    bool fadeFinished;
+
 
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(this);
+    }
+    private void Start()
+    {
+        GameManager.Instance.AddObserver(this);
+        fadeFinished = true;
     }
 
     public void TransitionToDestination(TransitionPoint transitionPoint)
@@ -39,6 +49,7 @@ public class SceneController : Singleton<SceneController>
         // TODO: 
         if (SceneManager.GetActiveScene().name != sceneName)
         {
+            //FIXME: 可以加入Fader 异步切换
             // 异步加载场景
             yield return SceneManager.LoadSceneAsync(sceneName);
 
@@ -46,6 +57,7 @@ public class SceneController : Singleton<SceneController>
             var transform = GetDestination(destinationTag).transform;
             yield return Instantiate(playerPrefab, transform.position, transform.rotation);
             SaveManager.Instance.LoadPlayerData();
+            //FIXME: 可以加入Fader 异步切换
 
             // 异步读取数据
             yield break;
@@ -61,7 +73,6 @@ public class SceneController : Singleton<SceneController>
             playerAgent.enabled = true;
             yield return null;
         }
-
     }
 
     private TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
@@ -95,8 +106,10 @@ public class SceneController : Singleton<SceneController>
     // 新的场景. 如果要新的场景, 传入新的场景名称
     IEnumerator LoadLevel(string scene)
     {
+        SceneFader fade = Instantiate(sceneFaderPrefab);
         if (scene != "")
         {
+            yield return StartCoroutine(fade.FadeOut(2.5f));
             yield return SceneManager.LoadSceneAsync(scene);
             // 此时当前的 Scene 已经完全加载
 
@@ -108,13 +121,27 @@ public class SceneController : Singleton<SceneController>
 
             // 保存游戏
             SaveManager.Instance.SavePlayerData();
+            yield return StartCoroutine(fade.FadeIn(2.5f));
             yield break;
         }
     }
 
     IEnumerator LoadMain()
     {
+        // 增加渐入检出
+        SceneFader fader = Instantiate(sceneFaderPrefab);
+        yield return StartCoroutine(fader.FadeOut(2.0f));
         yield return SceneManager.LoadSceneAsync("Main");
+        yield return StartCoroutine(fader.FadeIn(2.0f));
         yield break;
+    }
+
+    public void EndNotify()
+    {
+        if (fadeFinished)
+        {
+            fadeFinished = false;
+            StartCoroutine(LoadMain());
+        }
     }
 }
